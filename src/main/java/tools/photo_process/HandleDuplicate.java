@@ -24,7 +24,7 @@ public class HandleDuplicate {
 
 	private String LOGPATH = "";
 	private FileWriter fw = null;
-	
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");	//NOTICE: Just need to match to date. No need to specify time(hour, minute, second)
 
 	public static native long GetCompressedFileSize(String filename);
@@ -61,7 +61,7 @@ public class HandleDuplicate {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//Handle dupliacates of same day
 	public void handle(){
 		System.out.println("*** Reminder: Execute RenameByModifiedTime.java before execute this. ***");
@@ -69,16 +69,22 @@ public class HandleDuplicate {
 		if (sourceFolder.isDirectory()) {
 			File files[] = sourceFolder.listFiles();
 			Map<String, String> dupMap = new TreeMap<String, String>();
+
+			//视频后缀
+			Set<String> videoPostfixes = new HashSet<>();
+			videoPostfixes.add(".mp4");
+			videoPostfixes.add(".mov");
+
 			for (File file : files) {
 				if(file.isDirectory())
 					continue;
-				
+
 				String name = file.getName().toLowerCase();
-				String postfix = name.substring(name.lastIndexOf("."));
-				//if not mp4, move to "notvideo" folder
-				if(!postfix.equals(".mp4"))
+				String postfix = name.substring(name.lastIndexOf(".")).toLowerCase();
+				//if not video, move to "notvideo" folder
+				if(videoPostfixes.contains(postfix))
 					moveFile(file, NOTVIDEOPATH);
-				
+
 				//handle duplicate videos
 				String day = this.getDayFromFileName(file.getName());
 				if(day.equals(""))	//Failed to extract date from file, skip this file.
@@ -94,15 +100,15 @@ public class HandleDuplicate {
 					moveFile(file, DUPLICATEDPATH);
 				}
 			}
-			
+
 			//log updates
 			logDuplications(dupMap);
-			
+
 		}else{
 			System.out.println(path + "is a file, skip");
 		}
 	}
-	
+
 	//Handle duplicates of different days
 	public void handleLevel2(){
 		System.out.println("*** Handle duplicates from different days ***");
@@ -113,9 +119,9 @@ public class HandleDuplicate {
 		for (File file : files) {
 			if(file.isDirectory())
 				continue;
-			
+
 			String name = file.getName();
-			
+
 			//handle duplicate videos
 			Long key = file.length();
 			if(!dupMap2.containsKey(key)){
@@ -130,12 +136,12 @@ public class HandleDuplicate {
 				moveFile(file, DUPLICATEDPATH2);
 			}
 		}
-		
+
 		//move files in firstDuplicatedNames to DUPLICATEDPATH2 to.
 		//This is to facility confirmation if it's really duplicated later.
-		for (File file : firstDuplicatedNames) 
+		for (File file : firstDuplicatedNames)
 			moveFile(file, DUPLICATEDPATH2);
-		
+
 		//log updates
 		logDuplications2(dupMap2);
 	}
@@ -173,7 +179,7 @@ public class HandleDuplicate {
 		for (File file : similarSizeFilesToMove)
 			moveFile(file, DUPLICATEDPATH3);
 	}
-	
+
 	//Extract date from filename.
 	private String getDayFromFileName(String Filename){
 		Date date = null;
@@ -188,32 +194,32 @@ public class HandleDuplicate {
 		String day = date.getDate() < 10 ? "0" + date.getDate(): date.getDate() + "";
 		return year + month + day;
 	}
-	
+
 	//Move file to another folder
 	private boolean moveFile(File file, String targetFolder){
 		System.out.println("Moving '" + file + "' to folder '" + targetFolder + "'");
-		File dest = new File(targetFolder + File.separator + file.getName());  
+		File dest = new File(targetFolder + File.separator + file.getName());
 		return file.renameTo(dest);
 	}
-	
+
 	//Log contents in dupMap
 	public void logDuplications(Map<String, String> dupMap){
 		try {
 			Set<String> keySet = dupMap.keySet();
-			fw.write( "Date" + "\t\t\t" + "Size" + "\t\t" + "FileNames\r\n");  
+			fw.write( "Date" + "\t\t\t" + "Size" + "\t\t" + "FileNames\r\n");
 			for(String key: keySet){
 				String v = dupMap.get(key);
 				int size = v.split(",").length;
 				if(size > 1)
-					fw.write( key.split(":")[0] + "\t\t" + key.split(":")[1] + "\t\t" + dupMap.get(key) + "\r\n");  
+					fw.write( key.split(":")[0] + "\t\t" + key.split(":")[1] + "\t\t" + dupMap.get(key) + "\r\n");
 			}
-			
+
 			fw.flush();
 		} catch (IOException e) {
 			System.out.println("Exception when logging duplicated files:" + e.getMessage());
 		}
 	}
-	
+
 	//Log contents in dupMap2
 	public void logDuplications2(Map<Long, String> dupMap){
 		try {
