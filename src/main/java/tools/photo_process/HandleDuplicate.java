@@ -74,6 +74,7 @@ public class HandleDuplicate {
 			Set<String> videoPostfixes = new HashSet<>();
 			videoPostfixes.add(".mp4");
 			videoPostfixes.add(".mov");
+			videoPostfixes.add(".avi");
 
 			for (File file : files) {
 				if(file.isDirectory())
@@ -82,7 +83,7 @@ public class HandleDuplicate {
 				String name = file.getName().toLowerCase();
 				String postfix = name.substring(name.lastIndexOf(".")).toLowerCase();
 				//if not video, move to "notvideo" folder
-				if(videoPostfixes.contains(postfix))
+				if(!videoPostfixes.contains(postfix))
 					moveFile(file, NOTVIDEOPATH);
 
 				//handle duplicate videos
