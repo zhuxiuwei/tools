@@ -12,6 +12,11 @@ public class Copy {
     private String 已新增;
     private String 目前馆址;
     private String 件;
+    private String cat3;
+    private String cat4;
+    private String cat5;
+    private String 馆藏期限;
+
 
     public String get复本号() {
         return 复本号;
@@ -99,5 +104,58 @@ public class Copy {
 
     public void set件(String 件) {
         this.件 = 件;
+    }
+
+    public String getCat3() {
+        return cat3;
+    }
+
+    public void setCat3(String cat3) {
+        this.cat3 = cat3;
+    }
+
+    public String getCat4() {
+        return cat4;
+    }
+
+    public void setCat4(String cat4) {
+        this.cat4 = cat4;
+    }
+
+    public String getCat5() {
+        return cat5;
+    }
+
+    public void setCat5(String cat5) {
+        this.cat5 = cat5;
+    }
+
+    public String get馆藏期限() {
+        return 馆藏期限;
+    }
+
+    public void set馆藏期限(String 馆藏期限) {
+        this.馆藏期限 = 馆藏期限;
+    }
+
+    @Override
+    public String toString() {
+        return "Copy{" +
+                "复本号='" + 复本号 + '\'' +
+                ", 标识='" + 标识 + '\'' +
+                ", 馆别='" + 馆别 + '\'' +
+                ", 价格='" + 价格 + '\'' +
+                ", 文献类别1='" + 文献类别1 + '\'' +
+                ", 文献类别2='" + 文献类别2 + '\'' +
+                ", 类型='" + 类型 + '\'' +
+                ", 永久馆藏位置='" + 永久馆藏位置 + '\'' +
+                ", 已新增='" + 已新增 + '\'' +
+                ", 目前馆址='" + 目前馆址 + '\'' +
+                ", 件='" + 件 + '\'' +
+                ", cat3='" + cat3 + '\'' +
+                ", cat4='" + cat4 + '\'' +
+                ", cat5='" + cat5 + '\'' +
+                ", 馆藏期限='" + 馆藏期限 + '\'' +
+                '}';
     }
 }

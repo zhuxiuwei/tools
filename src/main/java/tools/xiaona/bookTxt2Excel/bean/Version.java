@@ -1,10 +1,11 @@
 package tools.xiaona.bookTxt2Excel.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Version {
     private String versionNumber;
-    private List<Copy> copies;
+    private List<Copy> copies = new ArrayList<>();
 
     public String getVersionNumber() {
         return versionNumber;
@@ -20,5 +21,13 @@ public class Version {
 
     public void setCopies(List<Copy> copies) {
         this.copies = copies;
+    }
+
+    @Override
+    public String toString() {
+        return "Version{" +
+                "versionNumber='" + versionNumber + '\'' +
+                ", copies=" + copies +
+                '}';
     }
 }

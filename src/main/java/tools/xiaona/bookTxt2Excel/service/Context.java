@@ -16,6 +16,7 @@ public class Context {
     private Version currentVersion;   //当前解析中的版本
     private Copy currentCopy;   //当前解析中的拷贝
     private CurrentHandlePart currentHandlePart = CurrentHandlePart.NONE;    //当前处理的部分。初始为NONE
+    private String lastHandleBookFiled;     //上一个处理的book属性。用于处理book属性值在txt里被换行了的场景。
 
     //上下文重置
     public void resetContext(){
@@ -23,10 +24,7 @@ public class Context {
         this.currentVersion = null;
         this.currentCopy = null;
         this.currentHandlePart = CurrentHandlePart.NONE;
-    }
-
-    public void addNewBookToBookData(Book book){
-        this.bookData.add(book);
+        this.lastHandleBookFiled = null;
     }
 
     /*getter/setter*/
@@ -68,5 +66,13 @@ public class Context {
 
     public void setCurrentCopy(Copy currentCopy) {
         this.currentCopy = currentCopy;
+    }
+
+    public String getLastHandleBookFiled() {
+        return lastHandleBookFiled;
+    }
+
+    public void setLastHandleBookFiled(String lastHandleBookFiled) {
+        this.lastHandleBookFiled = lastHandleBookFiled;
     }
 }

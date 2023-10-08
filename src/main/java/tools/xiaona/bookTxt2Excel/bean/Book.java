@@ -13,7 +13,54 @@ public class Book {
     private List<String> 一般注 = new ArrayList<>();
     private List<String> 论题主题 = new ArrayList<>();
     private List<String> 个人名称等同知识责任 = new ArrayList<>();
+    private List<String> 丛书 = new ArrayList<>();
+    private List<String> 目次备注 = new ArrayList<>();
+    private List<String> 概要 = new ArrayList<>();
+    private List<String> 个人主题 = new ArrayList<>();
+    private List<String> 变异题名 = new ArrayList<>();
+    private List<String> 题名主题 = new ArrayList<>();
+
     private List<Version> versions = new ArrayList<>();
+
+    public List<String> get目次备注() {
+        return 目次备注;
+    }
+
+    public void set目次备注(List<String> 目次备注) {
+        this.目次备注 = 目次备注;
+    }
+
+    public List<String> get概要() {
+        return 概要;
+    }
+
+    public void set概要(List<String> 概要) {
+        this.概要 = 概要;
+    }
+
+    public List<String> get个人主题() {
+        return 个人主题;
+    }
+
+    public void set个人主题(List<String> 个人主题) {
+        this.个人主题 = 个人主题;
+    }
+
+    public List<String> get变异题名() {
+        return 变异题名;
+    }
+
+    public void set变异题名(List<String> 变异题名) {
+        this.变异题名 = 变异题名;
+    }
+
+    public List<String> get题名主题() {
+        return 题名主题;
+    }
+
+    public void set题名主题(List<String> 题名主题) {
+        this.题名主题 = 题名主题;
+    }
 
     public List<String> getISBN() {
         return ISBN;
@@ -93,5 +140,35 @@ public class Book {
 
     public void setVersions(List<Version> versions) {
         this.versions = versions;
+    }
+
+    public List<String> get丛书() {
+        return 丛书;
+    }
+
+    public void set丛书(List<String> 丛书) {
+        this.丛书 = 丛书;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "ISBN=" + ISBN +
+                ", 作品语种=" + 作品语种 +
+                ", 题名=" + 题名 +
+                ", 版本=" + 版本 +
+                ", 出版信息=" + 出版信息 +
+                ", 稽核项=" + 稽核项 +
+                ", 一般注=" + 一般注 +
+                ", 论题主题=" + 论题主题 +
+                ", 个人名称等同知识责任=" + 个人名称等同知识责任 +
+                ", 丛书=" + 丛书 +
+                ", 目次备注=" + 目次备注 +
+                ", 概要=" + 概要 +
+                ", 个人主题=" + 个人主题 +
+                ", 变异题名=" + 变异题名 +
+                ", 题名主题=" + 题名主题 +
+                ", versions=" + versions +
+                '}';
     }
 }
