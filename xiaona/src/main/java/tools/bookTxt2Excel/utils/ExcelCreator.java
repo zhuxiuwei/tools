@@ -34,8 +34,12 @@ public class ExcelCreator {
 
         //2. 根据map，生成excel
         java.util.List<String> excelHeaders = new ArrayList<>();    //生成headers
-        for(Collection<String> value: convertConfig.convertClassAndFields.values())
-            excelHeaders.addAll(value);
+        for(String className: convertConfig.convertClassAndFields.keySet()) {
+            List<String> fields = new ArrayList<>(convertConfig.convertClassAndFields.get(className));
+            if(convertConfig.excludedClassFieldsInExcel.get(className) != null)
+                fields.removeAll(convertConfig.excludedClassFieldsInExcel.get(className));  //将「excludedClassFieldsInExcel」配置项里的header都移除
+            excelHeaders.addAll(fields);
+        }
         saveMapToExcel(excelHeaders, resultList, convertConfig.getTargetExcelPath());   //写excel
     }
 

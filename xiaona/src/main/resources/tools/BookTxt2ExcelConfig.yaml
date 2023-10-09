@@ -1,5 +1,8 @@
+# 原始txt文件地址
 sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/需要屏蔽的图书.txt"
+# 生成目标excel文件的目录地址
 targetExcelPath: "/Users/zhuxiuwei/Downloads"
+# excel要包含哪些表头。不需要的，加上注释，注释掉即可。
 printClassAndFields:
   - className: "tools.bookTxt2Excel.bean.BookWithStingFields"
     fields:
@@ -40,4 +43,13 @@ printClassAndFields:
       - "cat4"
       - "cat5"
       - "馆藏期限"
+# 不用修改
 bottomClassName: "tools.bookTxt2Excel.bean.Copy"
+# 不用修改。 解析txt过程中用到的，但是在excel表头里不应该出现的字段。
+excludedClassFieldsInExcel:
+  - className: "tools.bookTxt2Excel.bean.BookWithStingFields"
+    fields:
+      - "versions"
+  - className: "tools.bookTxt2Excel.bean.Version"
+    fields:
+      - "copies"

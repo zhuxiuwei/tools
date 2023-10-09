@@ -11,18 +11,18 @@ public class ConvertConfig {
     public Class<ConvertableToExcel> bottomConvertClass;    //最底层待转换excel的java类
     public String targetExcelPath;  //目标excel生成地址
     public String sourceTxtFilePath;  //源txt文件地址
+    public Map<String, List<String>> excludedClassFieldsInExcel; //解析txt过程中用到的，但是在excel表头里不应该出现的字段。
 
     public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass) {
         this.convertClassAndFields = convertClassAndFields;
         this.bottomConvertClass = bottomConvertClass;
     }
-
-    public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass,
-                         String targetExcelPath, String sourceTxtFilePath) {
+    public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass, String targetExcelPath, String sourceTxtFilePath, Map<String, List<String>> excludedClassFieldsInExcel) {
         this.convertClassAndFields = convertClassAndFields;
         this.bottomConvertClass = bottomConvertClass;
         this.targetExcelPath = targetExcelPath;
         this.sourceTxtFilePath = sourceTxtFilePath;
+        this.excludedClassFieldsInExcel = excludedClassFieldsInExcel;
     }
 
     public Map<String, List<String>> getConvertClassAndFields() {
@@ -57,6 +57,14 @@ public class ConvertConfig {
         this.sourceTxtFilePath = sourceTxtFilePath;
     }
 
+    public Map<String, List<String>> getExcludedClassFieldsInExcel() {
+        return excludedClassFieldsInExcel;
+    }
+
+    public void setExcludedClassFieldsInExcel(Map<String, List<String>> excludedClassFieldsInExcel) {
+        this.excludedClassFieldsInExcel = excludedClassFieldsInExcel;
+    }
+
     @Override
     public String toString() {
         return "ConvertConfig{" +
@@ -64,6 +72,7 @@ public class ConvertConfig {
                 ", bottomConvertClass=" + bottomConvertClass +
                 ", targetExcelPath='" + targetExcelPath + '\'' +
                 ", sourceTxtFilePath='" + sourceTxtFilePath + '\'' +
+                ", excludedClassFieldsInExcel=" + excludedClassFieldsInExcel +
                 '}';
     }
 }

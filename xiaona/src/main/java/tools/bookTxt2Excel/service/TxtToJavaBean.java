@@ -4,24 +4,19 @@ import tools.bookTxt2Excel.bean.Book;
 import tools.bookTxt2Excel.bean.BookWithStingFields;
 import tools.bookTxt2Excel.bean.Copy;
 import tools.bookTxt2Excel.bean.Version;
-import tools.bookTxt2Excel.utils.ConvertConfig;
-import tools.bookTxt2Excel.utils.ExcelCreator;
-import tools.bookTxt2Excel.utils.YamlConfigParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * 文本处理
+ * 文本处理，将文本转换为javabean
  */
-public class TxtHandler {
+public class TxtToJavaBean {
 
-    private List<String> errorLines = new ArrayList<>();    //处理过程中出错的行。最后会打印日志。
 
     /**
      * 输入txt文件地址，将txt转换为Book对象
@@ -352,18 +347,5 @@ public class TxtHandler {
                     }
                 }
         }
-    }
-
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        //读取配置文件
-        ConvertConfig convertConfig = YamlConfigParser.parseConfig("tools/BookTxt2ExcelConfig.yaml");
-
-        //1. 解析txt文本成结构化的javaBean
-        List<BookWithStingFields> books = txt2Books(convertConfig.getSourceTxtFilePath());
-
-        //2. javabean生成excel
-        ExcelCreator excelCreator = new ExcelCreator();
-        excelCreator.crateExcelFromBook(books, convertConfig);
-
     }
 }
