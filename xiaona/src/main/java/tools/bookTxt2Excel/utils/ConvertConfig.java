@@ -13,16 +13,11 @@ public class ConvertConfig {
     public String sourceTxtFilePath;  //源txt文件地址
     public Map<String, List<String>> excludedClassFieldsInExcel; //解析txt过程中用到的，但是在excel表头里不应该出现的字段。
 
+    public String combineMultipleValuesToOneValueDelimiter; //一个字段有多个值，合并成一个值时的分隔符
+
     public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass) {
         this.convertClassAndFields = convertClassAndFields;
         this.bottomConvertClass = bottomConvertClass;
-    }
-    public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass, String targetExcelPath, String sourceTxtFilePath, Map<String, List<String>> excludedClassFieldsInExcel) {
-        this.convertClassAndFields = convertClassAndFields;
-        this.bottomConvertClass = bottomConvertClass;
-        this.targetExcelPath = targetExcelPath;
-        this.sourceTxtFilePath = sourceTxtFilePath;
-        this.excludedClassFieldsInExcel = excludedClassFieldsInExcel;
     }
 
     public Map<String, List<String>> getConvertClassAndFields() {
@@ -65,6 +60,23 @@ public class ConvertConfig {
         this.excludedClassFieldsInExcel = excludedClassFieldsInExcel;
     }
 
+    public String getCombineMultipleValuesToOneValueDelimiter() {
+        return combineMultipleValuesToOneValueDelimiter;
+    }
+
+    public void setCombineMultipleValuesToOneValueDelimiter(String combineMultipleValuesToOneValueDelimiter) {
+        this.combineMultipleValuesToOneValueDelimiter = combineMultipleValuesToOneValueDelimiter;
+    }
+
+    public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass, String targetExcelPath, String sourceTxtFilePath, Map<String, List<String>> excludedClassFieldsInExcel, String combineMultipleValuesToOneValueDelimiter) {
+        this.convertClassAndFields = convertClassAndFields;
+        this.bottomConvertClass = bottomConvertClass;
+        this.targetExcelPath = targetExcelPath;
+        this.sourceTxtFilePath = sourceTxtFilePath;
+        this.excludedClassFieldsInExcel = excludedClassFieldsInExcel;
+        this.combineMultipleValuesToOneValueDelimiter = combineMultipleValuesToOneValueDelimiter;
+    }
+
     @Override
     public String toString() {
         return "ConvertConfig{" +
@@ -73,6 +85,7 @@ public class ConvertConfig {
                 ", targetExcelPath='" + targetExcelPath + '\'' +
                 ", sourceTxtFilePath='" + sourceTxtFilePath + '\'' +
                 ", excludedClassFieldsInExcel=" + excludedClassFieldsInExcel +
+                ", combineMultipleValuesToOneValueDelimiter='" + combineMultipleValuesToOneValueDelimiter + '\'' +
                 '}';
     }
 }

@@ -6,6 +6,7 @@ import tools.bookTxt2Excel.bean.*;
 import tools.bookTxt2Excel.utils.ConvertConfig;
 import tools.bookTxt2Excel.utils.ExcelCreator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Test;
 public class bookTxt2ExcelTest {
 
     @Test
-    public void testPrintCertainFields() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+    public void testPrintCertainFields() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, IOException {
         ExcelCreator excelCreator = new ExcelCreator();
         java.util.List<Map<String, String>> resultList =  new ArrayList<>();
         excelCreator.createResultMapList(mockBook(), mockConfig(), resultList, new HashMap<>());
@@ -27,7 +28,7 @@ public class bookTxt2ExcelTest {
     }
 
     @Test
-    public void testBookWithStingFields() throws IllegalAccessException, NoSuchFieldException {
+    public void testBookWithStingFields() throws IllegalAccessException, NoSuchFieldException, IOException, ClassNotFoundException {
         BookWithStingFields book = mockBook();
         System.out.println(book);
         /**
@@ -59,7 +60,7 @@ public class bookTxt2ExcelTest {
                 (Class<ConvertableToExcel>) Class.forName("tools.bookTxt2Excel.bean.Copy"));
     }
 
-    private BookWithStingFields mockBook() throws NoSuchFieldException, IllegalAccessException {
+    private BookWithStingFields mockBook() throws NoSuchFieldException, IllegalAccessException, IOException, ClassNotFoundException {
         Book book = new Book();
         book.setISBN(List.of("isbn1","isbn2"));
         book.set题名(List.of("西游记"));

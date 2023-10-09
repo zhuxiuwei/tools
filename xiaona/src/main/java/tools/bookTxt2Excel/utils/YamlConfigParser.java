@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public class YamlConfigParser {
 
-    //读取配置文件，打印指定类和字段的主逻辑代码
     public static ConvertConfig parseConfig(String filename) throws IOException, ClassNotFoundException {
         InputStream is = YamlConfigParser.class.getClassLoader().getResourceAsStream(filename);
         if (is == null) {
@@ -35,6 +34,7 @@ public class YamlConfigParser {
         String sourceTxtFilePath = (String) config.get("sourceTxtFilePath");
         String targetExcelPath = (String) config.get("targetExcelPath");
         String bottomClassName = (String) config.get("bottomClassName");
+        String combineMultipleValuesToOneValueDelimiter = (String) config.get("combineMultipleValuesToOneValueDelimiter");
         if(Class.forName(bottomClassName) == null){
             System.err.println("bottomClassName对应的类不存在！");
             System.exit(0);
@@ -56,9 +56,11 @@ public class YamlConfigParser {
                 (Class<ConvertableToExcel>) Class.forName(bottomClassName),
                 targetExcelPath,
                 sourceTxtFilePath,
-                excludedClassFieldsInExcelMap);
+                excludedClassFieldsInExcelMap,
+                combineMultipleValuesToOneValueDelimiter);
     }
 
+    //for debug
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println(YamlConfigParser.parseConfig("tools/BookTxt2ExcelConfig.yaml"));
     }

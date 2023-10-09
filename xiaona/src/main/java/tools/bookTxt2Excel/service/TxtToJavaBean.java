@@ -7,6 +7,7 @@ import tools.bookTxt2Excel.bean.Version;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -41,6 +42,10 @@ public class TxtToJavaBean {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });

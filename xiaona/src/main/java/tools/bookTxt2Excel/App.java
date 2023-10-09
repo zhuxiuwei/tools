@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class App {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        System.out.println("生成excel中....");
         //读取配置文件
         ConvertConfig convertConfig = YamlConfigParser.parseConfig("tools/BookTxt2ExcelConfig.yaml");
 
@@ -22,5 +23,6 @@ public class App {
 
         //2. javabean生成excel
         new ExcelCreator().crateExcelFromBook(books, convertConfig);
+        System.out.println("生成excel成功！生成的excel文件目录：" + convertConfig.getTargetExcelPath());
     }
 }

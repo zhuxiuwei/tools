@@ -1,5 +1,9 @@
 package tools.bookTxt2Excel.bean;
 
+import tools.bookTxt2Excel.utils.ConvertConfig;
+import tools.bookTxt2Excel.utils.YamlConfigParser;
+
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +33,13 @@ public class BookWithStingFields implements ConvertableToExcel{
     private List<Version> versions = new ArrayList<>();
 
     //Book 转 BookWithStingFields时，List多元素转string的分隔符
-    private String delimiter = ",";
+    private String delimiter;
 
     //利用反射，将Book里的list值，转成字符串，用delimiter分隔
-    public BookWithStingFields(Book book) throws IllegalAccessException, NoSuchFieldException {
+    public BookWithStingFields(Book book) throws IllegalAccessException, NoSuchFieldException, IOException, ClassNotFoundException {
+        ConvertConfig convertConfig = YamlConfigParser.parseConfig("tools/BookTxt2ExcelConfig.yaml");
+        delimiter = convertConfig.getCombineMultipleValuesToOneValueDelimiter();
+
         Field[] listFields = book.getClass().getDeclaredFields();
         for(Field listField: listFields){
             listField.setAccessible(true);
