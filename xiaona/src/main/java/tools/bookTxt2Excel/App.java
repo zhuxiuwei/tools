@@ -2,9 +2,9 @@ package tools.bookTxt2Excel;
 
 import tools.bookTxt2Excel.bean.BookWithStingFields;
 import tools.bookTxt2Excel.service.TxtToJavaBean;
-import tools.bookTxt2Excel.utils.ConvertConfig;
-import tools.bookTxt2Excel.utils.ExcelCreator;
-import tools.bookTxt2Excel.utils.YamlConfigParser;
+import tools.bookTxt2Excel.config.ConvertConfig;
+import tools.bookTxt2Excel.service.ExcelCreator;
+import tools.bookTxt2Excel.config.YamlConfigParser;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,7 +1,7 @@
 package tools.bookTxt2Excel.bean;
 
-import tools.bookTxt2Excel.utils.ConvertConfig;
-import tools.bookTxt2Excel.utils.YamlConfigParser;
+import tools.bookTxt2Excel.config.ConvertConfig;
+import tools.bookTxt2Excel.config.YamlConfigParser;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

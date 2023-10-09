@@ -1,4 +1,4 @@
-package tools.bookTxt2Excel.utils;
+package tools.bookTxt2Excel.service;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import tools.bookTxt2Excel.bean.BookWithStingFields;
+import tools.bookTxt2Excel.config.ConvertConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;

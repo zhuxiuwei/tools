@@ -1,4 +1,4 @@
-package tools.bookTxt2Excel.utils;
+package tools.bookTxt2Excel.config;
 
 import tools.bookTxt2Excel.bean.ConvertableToExcel;
 

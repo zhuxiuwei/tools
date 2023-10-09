@@ -2,8 +2,8 @@ package tools;
 
 import org.junit.jupiter.api.Assertions;
 import tools.bookTxt2Excel.bean.*;
-import tools.bookTxt2Excel.utils.ConvertConfig;
-import tools.bookTxt2Excel.utils.ExcelCreator;
+import tools.bookTxt2Excel.config.ConvertConfig;
+import tools.bookTxt2Excel.service.ExcelCreator;
 
 import java.io.IOException;
 import java.util.ArrayList;
