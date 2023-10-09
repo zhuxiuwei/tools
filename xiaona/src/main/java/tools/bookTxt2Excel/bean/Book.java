@@ -1,9 +1,12 @@
-package tools.xiaona.bookTxt2Excel.bean;
+package tools.bookTxt2Excel.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Book {
+/**
+ * Book对象，属性都是List
+ */
+public class Book implements ConvertableToExcel{
     private List<String> ISBN = new ArrayList<>();
     private List<String> 作品语种 = new ArrayList<>();
     private List<String> 题名 = new ArrayList<>();

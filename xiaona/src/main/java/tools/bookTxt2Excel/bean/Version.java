@@ -1,9 +1,9 @@
-package tools.xiaona.bookTxt2Excel.bean;
+package tools.bookTxt2Excel.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Version {
+public class Version implements ConvertableToExcel{
     private String versionNumber;
     private List<Copy> copies = new ArrayList<>();
 

@@ -1,6 +1,6 @@
-package tools.xiaona.bookTxt2Excel.bean;
+package tools.bookTxt2Excel.bean;
 
-public class Copy {
+public class Copy implements ConvertableToExcel{
     private String 复本号;
     private String 标识;
     private String 馆别;

@@ -6,15 +6,8 @@
 
     <groupId>com.zxw</groupId>
     <artifactId>tools</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <dependencies>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>2.0.9</version>
-        </dependency>
-    </dependencies>
-
 
     <build>
         <plugins>
@@ -28,8 +21,28 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>xiaona</module>
+    </modules>
 
     <dependencies>
+        <!-- json处理 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>2.0.12</version>
+        </dependency>
+        <!-- yaml处理 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.12.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.12.4</version>
+        </dependency>
         <!-- Excel中表格POI插件 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
