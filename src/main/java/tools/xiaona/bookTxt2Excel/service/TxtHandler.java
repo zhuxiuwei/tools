@@ -1,11 +1,16 @@
 package tools.xiaona.bookTxt2Excel.service;
 
 import tools.xiaona.bookTxt2Excel.bean.Book;
+import tools.xiaona.bookTxt2Excel.bean.BookWithStingFields;
 import tools.xiaona.bookTxt2Excel.bean.Copy;
 import tools.xiaona.bookTxt2Excel.bean.Version;
+import tools.xiaona.bookTxt2Excel.utils.ConvertConfig;
+import tools.xiaona.bookTxt2Excel.utils.ExcelCreator;
+import tools.xiaona.bookTxt2Excel.utils.JsonConfigParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,27 +29,40 @@ public class TxtHandler {
      * @param txtFilePath txt文件地址
      * @return Book对象列表
      */
-    public static List<Book> txt2Books(String txtFilePath) throws FileNotFoundException {
+    public static List<BookWithStingFields> txt2Books(String txtFilePath) throws FileNotFoundException {
         Context context = new Context();
 
         Scanner sc = new Scanner(new File(txtFilePath));
-        int lineNo = 0; //当前处理行
+        int lineNo = 0; //当前处理行号
         while (sc.hasNextLine()){
             handleTxtSingleLine(context, sc.nextLine().trim(), ++lineNo);
         }
-        context.getBookData().forEach(x -> System.out.println(x));
-        return context.getBookData();
+        //context.getBookData().forEach(x -> System.out.println(x));   //for debug
+        List<Book> books = context.getBookData();
+        List<BookWithStingFields> res = new ArrayList<>();
+        books.forEach(book -> {
+            try {
+                BookWithStingFields bookWithStingFields = new BookWithStingFields(book);
+                res.add(bookWithStingFields);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        //res.forEach(x -> System.out.println(x));   //for debug
+        return res;
     }
 
     // 单独处理一行文本
     private static void handleTxtSingleLine(Context context, String line, int lineNo){
         if(isInvalidText(line))
             return;
-//        if(lineNo == 1216){
+//        if(lineNo == 1216){  //for debug
 //            System.out.println(1);
 //        }
         TxtLineType currentTxtLineType = getCurrentTxtLineType(context, line, lineNo);
-//        System.out.println(lineNo + ":" + line + ": " + currentTxtLineType);
+//        System.out.println(lineNo + ":" + line + ": " + currentTxtLineType);  //for debug
         switch (currentTxtLineType){
             case BOOK_STARTER:
                 handleBookStart(context, line, lineNo);
@@ -116,8 +134,8 @@ public class TxtHandler {
     private static void handleVersionStart(Context context, String line, int lineNo){
         if(!(context.getCurrentHandlePart() == CurrentHandlePart.BOOK
                 || context.getCurrentHandlePart() == CurrentHandlePart.COPY)){
-            System.out.println("异常 - 在处理版本之前，应当在处理book部分，或者copy部分!");
-            System.out.println(lineNo + ": " + line + "\n");
+            System.err.println("异常 - 在处理版本之前，应当在处理book部分，或者copy部分!");
+            System.err.println("行" + lineNo + ": " + line + "\n");
         }
         Book book = context.getCurrentBook();
         Version version = new Version();
@@ -131,8 +149,8 @@ public class TxtHandler {
     private static void handleCopyStart(Context context, String line, int lineNo){
         if(!(context.getCurrentHandlePart() == CurrentHandlePart.VERSION
                 || context.getCurrentHandlePart() == CurrentHandlePart.COPY)){
-            System.out.println("异常 - 在处理拷贝之前，应当在处理版本部分，或者copy部分!");
-            System.out.println(lineNo + ": " + line + "\n");
+            System.err.println("异常 - 在处理拷贝之前，应当在处理版本部分，或者copy部分!");
+            System.err.println("行" + lineNo + ": " + line + "\n");
         }
         Version version = context.getCurrentVersion();
         Copy copy = new Copy();
@@ -276,12 +294,12 @@ public class TxtHandler {
                                 currentBook.get题名主题().set(currentBook.get题名主题().size() - 1, currentBook.get题名主题().get((currentBook.get题名主题().size() - 1)) + line);
                                 break;
                             default:
-                                System.out.println("异常 - 未知的book属性！");
-                                System.out.println(lineNo + ": " + line + "\n");
+                                System.err.println("异常 - 未知的book属性！");
+                                System.err.println("行" + lineNo + ": " + line + "\n");
                         }
                     }else {
-                        System.out.println("异常 - 未知的book属性！");
-                        System.out.println(lineNo + ": " + line + "\n");
+                        System.err.println("异常 - 未知的book属性！");
+                        System.err.println("行" + lineNo + ": " + line + "\n");
                     }
                 }
                 break;
@@ -330,14 +348,23 @@ public class TxtHandler {
                     }else if(l.startsWith("临时馆藏")) {
                         copy.set馆藏期限("临时馆藏");
                     }else {
-                        System.out.println("异常 - 未知的copy属性！");
-                        System.out.println(lineNo + ": " + line + "\n");
+                        System.err.println("异常 - 未知的copy属性！");
+                        System.err.println("行" + lineNo + ": " + line + "\n");
                     }
                 }
         }
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        List<Book> books = txt2Books("e:\\需要屏蔽的图书(1).txt");
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        //读取配置文件
+        ConvertConfig convertConfig = JsonConfigParser.parseConfig("tools/BookTxt2ExcelConfig.json");
+
+        //1. 解析txt文本成结构化的javaBean
+        List<BookWithStingFields> books = txt2Books(convertConfig.getSourceTxtFilePath());
+
+        //2. javabean生成excel
+        ExcelCreator excelCreator = new ExcelCreator();
+        excelCreator.crateExcelFromBook(books, convertConfig);
+
     }
 }
