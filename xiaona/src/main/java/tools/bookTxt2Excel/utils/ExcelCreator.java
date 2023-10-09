@@ -1,4 +1,4 @@
-package tools.xiaona.bookTxt2Excel.utils;
+package tools.bookTxt2Excel.utils;
 
 import com.sun.tools.javac.util.Assert;
 import org.apache.poi.ss.usermodel.Cell;
@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import tools.xiaona.bookTxt2Excel.bean.BookWithStingFields;
+import tools.bookTxt2Excel.bean.BookWithStingFields;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package tools.xiaona.bookTxt2Excel.bean;
+package tools.bookTxt2Excel.bean;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

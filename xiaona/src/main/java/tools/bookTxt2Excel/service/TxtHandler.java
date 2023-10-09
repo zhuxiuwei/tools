@@ -1,18 +1,17 @@
-package tools.xiaona.bookTxt2Excel.service;
+package tools.bookTxt2Excel.service;
 
-import tools.xiaona.bookTxt2Excel.bean.Book;
-import tools.xiaona.bookTxt2Excel.bean.BookWithStingFields;
-import tools.xiaona.bookTxt2Excel.bean.Copy;
-import tools.xiaona.bookTxt2Excel.bean.Version;
-import tools.xiaona.bookTxt2Excel.utils.ConvertConfig;
-import tools.xiaona.bookTxt2Excel.utils.ExcelCreator;
-import tools.xiaona.bookTxt2Excel.utils.JsonConfigParser;
+import tools.bookTxt2Excel.bean.Book;
+import tools.bookTxt2Excel.bean.BookWithStingFields;
+import tools.bookTxt2Excel.bean.Copy;
+import tools.bookTxt2Excel.bean.Version;
+import tools.bookTxt2Excel.utils.ConvertConfig;
+import tools.bookTxt2Excel.utils.ExcelCreator;
+import tools.bookTxt2Excel.utils.YamlConfigParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -357,7 +356,7 @@ public class TxtHandler {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         //读取配置文件
-        ConvertConfig convertConfig = JsonConfigParser.parseConfig("tools/BookTxt2ExcelConfig.json");
+        ConvertConfig convertConfig = YamlConfigParser.parseConfig("tools/BookTxt2ExcelConfig.yaml");
 
         //1. 解析txt文本成结构化的javaBean
         List<BookWithStingFields> books = txt2Books(convertConfig.getSourceTxtFilePath());
