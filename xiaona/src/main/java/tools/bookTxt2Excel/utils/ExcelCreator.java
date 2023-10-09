@@ -1,6 +1,5 @@
 package tools.bookTxt2Excel.utils;
 
-import com.sun.tools.javac.util.Assert;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -84,14 +83,16 @@ public class ExcelCreator {
                         throw new RuntimeException(e);
                     }
                 } catch (NoSuchFieldException e) {
-                    Assert.error("field不存在");
+                    System.err.println("异常：field不存在！");
+                    System.exit(0);
                 }
             }
             if(convertConfig.bottomConvertClass == objectToPrint.getClass()){   //转化到了最底层，则需要把结果加到resultList里。
                 resultList.add(currentMapCopy);
             }
         }else {
-            Assert.error("打印对象不在配置文件中");
+            System.err.println("异常：打印对象不在配置文件中！");
+            System.exit(0);
         }
     }
 
