@@ -24,10 +24,17 @@ public class TxtToJavaBean {
      * @param txtFilePath txt文件地址
      * @return Book对象列表
      */
-    public static List<BookWithStingFields> txt2Books(String txtFilePath) throws FileNotFoundException {
+    public static List<BookWithStingFields> txt2Books(String txtFilePath) {
         Context context = new Context();
 
-        Scanner sc = new Scanner(new File(txtFilePath));
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new File(txtFilePath));
+        } catch (FileNotFoundException e) {
+            System.err.println("错误！文件不存在：" + txtFilePath);
+            System.err.println("程序异常退出");
+            System.exit(0);
+        }
         int lineNo = 0; //当前处理行号
         while (sc.hasNextLine()){
             handleTxtSingleLine(context, sc.nextLine().trim(), ++lineNo);

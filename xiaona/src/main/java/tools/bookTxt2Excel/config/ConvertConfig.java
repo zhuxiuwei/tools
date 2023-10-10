@@ -2,6 +2,7 @@ package tools.bookTxt2Excel.config;
 
 import tools.bookTxt2Excel.bean.ConvertableToExcel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -79,13 +80,12 @@ public class ConvertConfig {
 
     @Override
     public String toString() {
-        return "ConvertConfig{" +
-                "convertClassAndFields=" + convertClassAndFields +
-                ", bottomConvertClass=" + bottomConvertClass +
-                ", targetExcelPath='" + targetExcelPath + '\'' +
-                ", sourceTxtFilePath='" + sourceTxtFilePath + '\'' +
-                ", excludedClassFieldsInExcel=" + excludedClassFieldsInExcel +
-                ", combineMultipleValuesToOneValueDelimiter='" + combineMultipleValuesToOneValueDelimiter + '\'' +
-                '}';
+        List<String> fields = new ArrayList<>();
+        convertClassAndFields.values().stream().forEach(field -> fields.addAll(field));
+        fields.removeAll(this.excludedClassFieldsInExcel.values());
+        return  "保存excel文件地址：'" + targetExcelPath + '\'' +
+                "\n读取原始txt文件：'" + sourceTxtFilePath + '\'' +
+                "\nexcel表头：'" + fields + '\'' +
+                "\n分隔符：" + combineMultipleValuesToOneValueDelimiter ;
     }
 }

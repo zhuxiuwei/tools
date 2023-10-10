@@ -1,8 +1,8 @@
 # 原始txt文件地址
-sourceTxtFilePath: "E:\\需要屏蔽的图书.txt"
+sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/需要屏蔽的图书.txt"
 
 # 生成目标excel文件的目录地址
-targetExcelPath: "E:\\"
+targetExcelPath: "/Users/zhuxiuwei/Downloads"
 
 # 一个字段有多个值，合并成一个值时的分隔符。
 combineMultipleValuesToOneValueDelimiter: ","

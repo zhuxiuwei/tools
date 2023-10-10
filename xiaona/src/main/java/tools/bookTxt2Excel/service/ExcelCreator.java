@@ -23,8 +23,9 @@ public class ExcelCreator {
      * 将图书信息生成excel
      * @param books 待生成excel的图书信息
      * @param convertConfig 转换配置
+     * @return 生成excel的路径
      */
-    public void crateExcelFromBook(java.util.List<BookWithStingFields> books, ConvertConfig convertConfig){
+    public String crateExcelFromBook(java.util.List<BookWithStingFields> books, ConvertConfig convertConfig){
         //1. 根据要打印的Book对象，生成Map
         ArrayList<Map<String, String>> resultList =  new ArrayList<>();
         for(BookWithStingFields book: books) {
@@ -40,7 +41,7 @@ public class ExcelCreator {
                 fields.removeAll(convertConfig.excludedClassFieldsInExcel.get(className));  //将「excludedClassFieldsInExcel」配置项里的header都移除
             excelHeaders.addAll(fields);
         }
-        saveMapToExcel(excelHeaders, resultList, convertConfig.getTargetExcelPath());   //写excel
+        return saveMapToExcel(excelHeaders, resultList, convertConfig.getTargetExcelPath());   //写excel
     }
 
     /**
@@ -102,8 +103,9 @@ public class ExcelCreator {
      * @param excelHeaders excel表头
      * @param data 数据，是个list。list里每条数据是个map，其Key是表头，value是值。
      * @param excelPath excel保存目录
+     * @return 生成excel的路径
      */
-    public void saveMapToExcel(java.util.List<String> excelHeaders, java.util.List<Map<String, String>> data, String excelPath){
+    public String saveMapToExcel(java.util.List<String> excelHeaders, java.util.List<Map<String, String>> data, String excelPath){
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Sheet1");
 
@@ -127,11 +129,14 @@ public class ExcelCreator {
         }
 
         // 保存Excel文件
-        try (FileOutputStream outputStream = new FileOutputStream(excelPath + File.separator
-                + "图书txt信息转excel-" + System.currentTimeMillis() + ".xlsx")) {
+        excelPath = excelPath + File.separator + "图书txt信息转excel-" + System.currentTimeMillis() + ".xlsx";
+        try (FileOutputStream outputStream = new FileOutputStream(excelPath)) {
             workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("保存excel文件失败到路径失败：" + excelPath + ", 程序异常退出。");
+            System.exit(0);
         }
+        return excelPath;
     }
 }
