@@ -13,6 +13,7 @@ public class ConvertConfig {
     public String targetExcelPath;  //目标excel生成地址
     public String sourceTxtFilePath;  //源txt文件地址
     public Map<String, List<String>> excludedClassFieldsInExcel; //解析txt过程中用到的，但是在excel表头里不应该出现的字段。
+    public String versionNumberWhenFailedToParse;   //版本号解析失败时，默认设置的版本号
 
     public String combineMultipleValuesToOneValueDelimiter; //一个字段有多个值，合并成一个值时的分隔符
 
@@ -69,12 +70,13 @@ public class ConvertConfig {
         this.combineMultipleValuesToOneValueDelimiter = combineMultipleValuesToOneValueDelimiter;
     }
 
-    public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass, String targetExcelPath, String sourceTxtFilePath, Map<String, List<String>> excludedClassFieldsInExcel, String combineMultipleValuesToOneValueDelimiter) {
+    public ConvertConfig(Map<String, List<String>> convertClassAndFields, Class<ConvertableToExcel> bottomConvertClass, String targetExcelPath, String sourceTxtFilePath, Map<String, List<String>> excludedClassFieldsInExcel, String versionNumberWhenFailedToParse, String combineMultipleValuesToOneValueDelimiter) {
         this.convertClassAndFields = convertClassAndFields;
         this.bottomConvertClass = bottomConvertClass;
         this.targetExcelPath = targetExcelPath;
         this.sourceTxtFilePath = sourceTxtFilePath;
         this.excludedClassFieldsInExcel = excludedClassFieldsInExcel;
+        this.versionNumberWhenFailedToParse = versionNumberWhenFailedToParse;
         this.combineMultipleValuesToOneValueDelimiter = combineMultipleValuesToOneValueDelimiter;
     }
 

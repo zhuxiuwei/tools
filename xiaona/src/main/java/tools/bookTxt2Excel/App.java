@@ -26,7 +26,7 @@ public class App {
         System.out.println("==============配置信息==============\n");
 
         //1. 解析txt文本成结构化的javaBean
-        List<BookWithStingFields> books = TxtToJavaBean.txt2Books(convertConfig.getSourceTxtFilePath());
+        List<BookWithStingFields> books = new TxtToJavaBean(convertConfig).txt2Books(convertConfig.getSourceTxtFilePath());
 
         //2. javabean生成excel
         String excelPath = new ExcelCreator().crateExcelFromBook(books, convertConfig);

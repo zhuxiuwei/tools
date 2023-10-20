@@ -1,11 +1,14 @@
 # 原始txt文件地址
-sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/需要屏蔽的图书.txt"
+sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/列出馆藏-冯标准.txt"
 
 # 生成目标excel文件的目录地址
 targetExcelPath: "/Users/zhuxiuwei/Downloads"
 
 # 一个字段有多个值，合并成一个值时的分隔符。
 combineMultipleValuesToOneValueDelimiter: ","
+
+# 版本号解析失败时，默认设置的版本号
+versionNumberWhenFailedToParse: "**VERSION_PARSE_FAILED**"
 
 # excel要包含哪些表头。不需要的，加上注释，注释掉即可。
 printClassAndFields:

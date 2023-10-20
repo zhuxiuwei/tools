@@ -32,6 +32,7 @@ public class YamlConfigParser {
         String targetExcelPath = (String) config.get("targetExcelPath");
         String bottomClassName = (String) config.get("bottomClassName");
         String combineMultipleValuesToOneValueDelimiter = (String) config.get("combineMultipleValuesToOneValueDelimiter");
+        String versionNumberWhenFailedToParse = (String) config.get("versionNumberWhenFailedToParse");
         if(Class.forName(bottomClassName) == null){
             System.err.println("bottomClassName对应的类不存在！");
             System.exit(0);
@@ -54,6 +55,7 @@ public class YamlConfigParser {
                 targetExcelPath,
                 sourceTxtFilePath,
                 excludedClassFieldsInExcelMap,
+                versionNumberWhenFailedToParse,
                 combineMultipleValuesToOneValueDelimiter);
     }
 

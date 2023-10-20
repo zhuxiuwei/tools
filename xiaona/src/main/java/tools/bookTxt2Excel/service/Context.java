@@ -3,6 +3,7 @@ package tools.bookTxt2Excel.service;
 import tools.bookTxt2Excel.bean.Book;
 import tools.bookTxt2Excel.bean.Copy;
 import tools.bookTxt2Excel.bean.Version;
+import tools.bookTxt2Excel.service.enums.CurrentHandlePart;
 
 import java.util.ArrayList;
 import java.util.List;

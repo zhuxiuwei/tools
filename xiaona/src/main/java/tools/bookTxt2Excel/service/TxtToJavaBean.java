@@ -4,6 +4,9 @@ import tools.bookTxt2Excel.bean.Book;
 import tools.bookTxt2Excel.bean.BookWithStingFields;
 import tools.bookTxt2Excel.bean.Copy;
 import tools.bookTxt2Excel.bean.Version;
+import tools.bookTxt2Excel.config.ConvertConfig;
+import tools.bookTxt2Excel.service.enums.CurrentHandlePart;
+import tools.bookTxt2Excel.service.enums.TxtLineType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,13 +21,18 @@ import java.util.regex.Pattern;
  */
 public class TxtToJavaBean {
 
+    private ConvertConfig convertConfig;
+
+    public TxtToJavaBean(ConvertConfig convertConfig){
+        this.convertConfig = convertConfig;
+    }
 
     /**
      * 输入txt文件地址，将txt转换为Book对象
      * @param txtFilePath txt文件地址
      * @return Book对象列表
      */
-    public static List<BookWithStingFields> txt2Books(String txtFilePath) {
+    public List<BookWithStingFields> txt2Books(String txtFilePath) {
         Context context = new Context();
 
         Scanner sc = null;
@@ -40,33 +48,30 @@ public class TxtToJavaBean {
             handleTxtSingleLine(context, sc.nextLine().trim(), ++lineNo);
         }
         //context.getBookData().forEach(x -> System.out.println(x));   //for debug
+
+        //Book转BookWithStingFields
         List<Book> books = context.getBookData();
         List<BookWithStingFields> res = new ArrayList<>();
         books.forEach(book -> {
             try {
                 BookWithStingFields bookWithStingFields = new BookWithStingFields(book);
                 res.add(bookWithStingFields);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            } catch (NoSuchFieldException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
         //res.forEach(x -> System.out.println(x));   //for debug
+
         return res;
     }
 
     // 单独处理一行文本
-    private static void handleTxtSingleLine(Context context, String line, int lineNo){
+    private void handleTxtSingleLine(Context context, String line, int lineNo){
         if(isInvalidText(line))
             return;
-//        if(lineNo == 1216){  //for debug
-//            System.out.println(1);
-//        }
+        if(lineNo == 480){  //for debug
+            System.out.println(1);
+        }
         TxtLineType currentTxtLineType = getCurrentTxtLineType(context, line, lineNo);
 //        System.out.println(lineNo + ":" + line + ": " + currentTxtLineType);  //for debug
         switch (currentTxtLineType){
@@ -86,11 +91,14 @@ public class TxtToJavaBean {
     }
 
     //过滤掉无效文本
-    private static boolean isInvalidText(String text){
+    private boolean isInvalidText(String text){
         if(text == null || text.isEmpty()){
             return true;
         }
         if(text.equals("书目")){
+            return true;
+        }
+        if(text.equals("文献清单")){
             return true;
         }
         if(text.startsWith("产生的 星期")){
@@ -100,13 +108,15 @@ public class TxtToJavaBean {
     }
 
     // 判断当前文本行的类型：TxtLineType
-    private static TxtLineType getCurrentTxtLineType(Context context, String line, int lineNo){
+    private TxtLineType getCurrentTxtLineType(Context context, String line, int lineNo){
         if(line.startsWith("ISBN:")){   //'ISBN:'开头的，是book行
             return TxtLineType.BOOK_STARTER;
         }
         else if(line.startsWith("复本号:")){   //'复本号:'开头的，是拷贝行
             return TxtLineType.COPY_START;
-        }else {
+        } else if (line.startsWith("题名:") && context.getCurrentHandlePart() == CurrentHandlePart.COPY) {  //Book ISBN丢失的错误情况。
+            return TxtLineType.BOOK_STARTER;
+        } else {
             String regex = "^[a-zA-Z0-9\\-./:\\s()=]+/[a-zA-Z0-9\\-./:\\s()=]+$";     //只包含字母/数字/./斜杠/冒号的，则是版本行
             Pattern pattern = Pattern.compile(regex);
             if(pattern.matcher(line).matches()){
@@ -118,7 +128,7 @@ public class TxtToJavaBean {
     }
 
     //处理图书START文本
-    private static void handleBookStart(Context context, String line, int lineNo){
+    private void handleBookStart(Context context, String line, int lineNo){
         Book book = null;
         if(context.getCurrentHandlePart() != CurrentHandlePart.BOOK){   //当前处理的不是book，但是当前行是book类型，说明是一本新书的开始
             context.resetContext();
@@ -128,16 +138,22 @@ public class TxtToJavaBean {
         }else{
             book = context.getCurrentBook();
         }
+
+        //处理一行书开始的ISBN,或者题名。 TODO: 代码比较ugly和定制化，后续如果还有特殊情况，需要优化
         if(line.startsWith("ISBN:")){
             line = line.replace("ISBN:", "").trim();
             book.getISBN().add(line);
             context.setLastHandleBookFiled("ISBN");
+        }else if(line.startsWith("题名:")){
+            line = line.replace("题名:", "").trim();
+            book.get题名().add(line);
+            context.setLastHandleBookFiled("题名");
         }
         context.setCurrentHandlePart(CurrentHandlePart.BOOK);
     }
 
     //处理版本START
-    private static void handleVersionStart(Context context, String line, int lineNo){
+    private void handleVersionStart(Context context, String line, int lineNo){
         if(!(context.getCurrentHandlePart() == CurrentHandlePart.BOOK
                 || context.getCurrentHandlePart() == CurrentHandlePart.COPY)){
             System.err.println("异常 - 在处理版本之前，应当在处理book部分，或者copy部分!");
@@ -152,13 +168,24 @@ public class TxtToJavaBean {
     }
 
     //处理拷贝Start
-    private static void handleCopyStart(Context context, String line, int lineNo){
+    private void handleCopyStart(Context context, String line, int lineNo){
         if(!(context.getCurrentHandlePart() == CurrentHandlePart.VERSION
                 || context.getCurrentHandlePart() == CurrentHandlePart.COPY)){
             System.err.println("异常 - 在处理拷贝之前，应当在处理版本部分，或者copy部分!");
             System.err.println("行" + lineNo + ": " + line + "\n");
         }
         Version version = context.getCurrentVersion();
+
+        //version号没有识别出来的特殊情况！！！
+        if(version == null){
+            version = new Version();
+            version.setVersionNumber(convertConfig.versionNumberWhenFailedToParse);     //用配置文件里的默认值设置
+            Book book = context.getCurrentBook();
+            book.getVersions().add(version);
+            context.setCurrentHandlePart(CurrentHandlePart.VERSION);
+            context.setCurrentVersion(version);
+        }
+
         Copy copy = new Copy();
         version.getCopies().add(copy);
         context.setCurrentHandlePart(CurrentHandlePart.COPY);
@@ -179,7 +206,7 @@ public class TxtToJavaBean {
     }
 
     // 处理正常文本 TODO: 大量相似代码片段，如果频繁需求变更需要优化
-    private static void handleNormalText(Context context, String line, int lineNo){
+    private void handleNormalText(Context context, String line, int lineNo){
         switch (context.getCurrentHandlePart()){
             case VERSION:
                 break;

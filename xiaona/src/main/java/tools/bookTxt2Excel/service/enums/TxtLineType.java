@@ -1,4 +1,4 @@
-package tools.bookTxt2Excel.service;
+package tools.bookTxt2Excel.service.enums;
 
 /**
  * 一行文本的类型
