@@ -29,17 +29,16 @@ public class TxtToJavaBean {
 
     /**
      * 输入txt文件地址，将txt转换为Book对象
-     * @param txtFilePath txt文件地址
      * @return Book对象列表
      */
-    public List<BookWithStingFields> txt2Books(String txtFilePath) {
+    public List<BookWithStingFields> txt2Books() {
         Context context = new Context();
 
         Scanner sc = null;
         try {
-            sc = new Scanner(new File(txtFilePath));
+            sc = new Scanner(new File(convertConfig.sourceTxtFilePath));
         } catch (FileNotFoundException e) {
-            System.err.println("错误！文件不存在：" + txtFilePath);
+            System.err.println("错误！文件不存在：" + convertConfig.sourceTxtFilePath);
             System.err.println("程序异常退出");
             System.exit(0);
         }
