@@ -29,7 +29,7 @@ public class App {
         List<BookWithStingFields> books = new TxtToJavaBean(convertConfig).txt2Books(convertConfig.getSourceTxtFilePath());
 
         //2. javabean生成excel
-        String excelPath = new ExcelCreator().crateExcelFromBook(books, convertConfig);
+        String excelPath = new ExcelCreator(convertConfig).crateExcelFromBook(books);
         System.out.println("生成excel成功，文件路径：" + excelPath);
     }
 }
