@@ -1,5 +1,5 @@
 # 原始txt文件地址
-sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/列出馆藏-冯标准.txt"
+sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/汉推所中文.txt"
 
 # 生成目标excel文件的目录地址
 targetExcelPath: "/Users/zhuxiuwei/Downloads"

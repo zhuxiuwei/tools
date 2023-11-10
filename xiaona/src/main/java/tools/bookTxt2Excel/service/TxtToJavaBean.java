@@ -97,10 +97,16 @@ public class TxtToJavaBean {
         if(text.equals("书目")){
             return true;
         }
+        if(text.equals("Item List")){
+            return true;
+        }
         if(text.equals("文献清单")){
             return true;
         }
         if(text.startsWith("产生的 星期")){
+            return  true;
+        }
+        if(text.startsWith("产生的 周")){
             return  true;
         }
         return false;
