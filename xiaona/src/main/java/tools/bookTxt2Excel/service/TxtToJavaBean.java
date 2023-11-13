@@ -62,9 +62,9 @@ public class TxtToJavaBean {
     private void handleTxtSingleLine(Context context, String line, int lineNo){
         if(isInvalidText(line))
             return;
-        if(lineNo == 143){  //for debug
-            System.out.println("");
-        }
+//        if(lineNo == 143){  //for debug
+//            System.out.println("");
+//        }
         TxtLineType currentTxtLineType = getCurrentTxtLineType(context, line, lineNo);
 //        System.out.println(lineNo + ":" + line + ": " + currentTxtLineType);  //for debug
         switch (currentTxtLineType){
