@@ -31,16 +31,11 @@ public class TxtToJavaBean {
      */
     public List<BookWithStingFields> txt2Books() {
         Context context = new Context();
-        //保存<行号:原文> map，到context。报错过程中，绿掉了invalid text
-        context.setOriginBookContentMap(originBookContentMap());
-        //处理原文
-        Scanner sc = null;
-        try {
-            sc = new Scanner(new File(convertConfig.sourceTxtFilePath));
-        } catch (FileNotFoundException e) {}
-        int lineNo = 0; //当前处理行号
-        while (sc.hasNextLine()){
-            handleTxtSingleLine(context, sc.nextLine().trim(), ++lineNo);
+        //保存<行号:原文> map到context，然后处理原文。
+        Map<Integer, String> rawContentMap = originBookContentMap();
+        context.setOriginBookContentMap(rawContentMap);
+        for (int i = 1; i < rawContentMap.size(); i++) {
+            handleTxtSingleLine(context, rawContentMap.get(i), i);  //处理原文的每一行
         }
         //context.getBookData().forEach(x -> System.out.println(x));   //for debug
         //Book转BookWithStingFields
@@ -62,7 +57,7 @@ public class TxtToJavaBean {
     private void handleTxtSingleLine(Context context, String line, int lineNo){
         if(isInvalidText(line))
             return;
-//        if(lineNo == 143){  //for debug
+//        if(lineNo == 80){  //for debug
 //            System.out.println("");
 //        }
         TxtLineType currentTxtLineType = getCurrentTxtLineType(context, line, lineNo);
@@ -96,7 +91,8 @@ public class TxtToJavaBean {
             System.exit(0);
         }
         while (sc.hasNextLine()){
-            res.put(lineNo++, sc.nextLine());
+            String line = sc.nextLine().trim();
+            res.put(lineNo++, line);
         }
         return res;
     }
