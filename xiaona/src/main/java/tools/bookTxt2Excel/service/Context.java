@@ -7,6 +7,7 @@ import tools.bookTxt2Excel.service.enums.CurrentHandlePart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 处理中的上下文信息
@@ -18,6 +19,7 @@ public class Context {
     private Copy currentCopy;   //当前解析中的拷贝
     private CurrentHandlePart currentHandlePart = CurrentHandlePart.NONE;    //当前处理的部分。初始为NONE
     private String lastHandleBookFiled;     //上一个处理的book属性。用于处理book属性值在txt里被换行了的场景。
+    private Map<Integer, String> originBookContentMap;  //txt原文。key是行号，value是那一行的原文内容
 
     //上下文重置
     public void resetContext(){
@@ -75,5 +77,13 @@ public class Context {
 
     public void setLastHandleBookFiled(String lastHandleBookFiled) {
         this.lastHandleBookFiled = lastHandleBookFiled;
+    }
+
+    public Map<Integer, String> getOriginBookContentMap() {
+        return originBookContentMap;
+    }
+
+    public void setOriginBookContentMap(Map<Integer, String> originBookContentMap) {
+        this.originBookContentMap = originBookContentMap;
     }
 }

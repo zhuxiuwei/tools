@@ -6,15 +6,14 @@ import tools.bookTxt2Excel.config.ConvertConfig;
 import tools.bookTxt2Excel.service.ExcelCreator;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
+
 import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
 
 public class bookTxt2ExcelTest {
-
     @Test
     public void testPrintCertainFields() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, IOException {
         ExcelCreator excelCreator = new ExcelCreator();
@@ -97,4 +96,36 @@ public class bookTxt2ExcelTest {
         return new BookWithStingFields(book);
     }
 
+    //版本号正则测试。231113：用正则判断版本号，已弃用。
+    @Test
+    public void isRegexMatch(){
+        //匹配的
+        List<String> matches = Arrays.asList(
+                "(HT)F I546.22/6",
+                "(HT)F O115.45/1:2",
+                "(HT)F K126/9",
+                " 10.(8)1-311./1",
+                "K820.7/133:1");
+        String regex = "^[a-zA-Z0-9\\-./:\\s()=]+/[a-zA-Z0-9\\-./:\\s()=]+$";     //只包含字母/数字/./斜杠/冒号的，则是版本行
+        for(String str: matches) {
+            boolean isMatch = Pattern.matches(regex, str.trim());
+            System.out.println(isMatch + ": " + str);
+        }
+
+        System.out.println("----------------");
+
+        //不匹配的
+        List<String> notMatches = Arrays.asList("Veneris / translated by J. W. Mackail.",
+                "Compendium of Roman history / Velleius Paterculus. Res",
+                "gestae divi Augusti / with an English translation by",
+                "Frederick W. Shipley.",
+                "printing)",
+                "translation by Earnest Cary ; on the basis of the",
+                "version of Herbert Baldwin Foster.",
+                "XX(1594601.1)");
+        for(String str: notMatches) {
+            boolean isMatch = Pattern.matches(regex, str.trim());
+            System.out.println(isMatch + ": " + str);
+        }
+    }
 }

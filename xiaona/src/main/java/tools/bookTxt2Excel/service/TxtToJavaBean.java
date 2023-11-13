@@ -11,9 +11,7 @@ import tools.bookTxt2Excel.service.enums.TxtLineType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -33,21 +31,18 @@ public class TxtToJavaBean {
      */
     public List<BookWithStingFields> txt2Books() {
         Context context = new Context();
-
+        //保存<行号:原文> map，到context。报错过程中，绿掉了invalid text
+        context.setOriginBookContentMap(originBookContentMap());
+        //处理原文
         Scanner sc = null;
         try {
             sc = new Scanner(new File(convertConfig.sourceTxtFilePath));
-        } catch (FileNotFoundException e) {
-            System.err.println("错误！文件不存在：" + convertConfig.sourceTxtFilePath);
-            System.err.println("程序异常退出");
-            System.exit(0);
-        }
+        } catch (FileNotFoundException e) {}
         int lineNo = 0; //当前处理行号
         while (sc.hasNextLine()){
             handleTxtSingleLine(context, sc.nextLine().trim(), ++lineNo);
         }
         //context.getBookData().forEach(x -> System.out.println(x));   //for debug
-
         //Book转BookWithStingFields
         List<Book> books = context.getBookData();
         List<BookWithStingFields> res = new ArrayList<>();
@@ -60,7 +55,6 @@ public class TxtToJavaBean {
             }
         });
         //res.forEach(x -> System.out.println(x));   //for debug
-
         return res;
     }
 
@@ -68,9 +62,9 @@ public class TxtToJavaBean {
     private void handleTxtSingleLine(Context context, String line, int lineNo){
         if(isInvalidText(line))
             return;
-//        if(lineNo == 480){  //for debug
-//            System.out.println(1);
-//        }
+        if(lineNo == 143){  //for debug
+            System.out.println("");
+        }
         TxtLineType currentTxtLineType = getCurrentTxtLineType(context, line, lineNo);
 //        System.out.println(lineNo + ":" + line + ": " + currentTxtLineType);  //for debug
         switch (currentTxtLineType){
@@ -87,6 +81,24 @@ public class TxtToJavaBean {
                 handleNormalText(context, line, lineNo);
                 break;
         }
+    }
+
+    //txt原文
+    private Map<Integer, String> originBookContentMap(){
+        Map<Integer, String> res = new HashMap<>();
+        Scanner sc = null;
+        int lineNo = 1;
+        try {
+            sc = new Scanner(new File(convertConfig.sourceTxtFilePath));
+        } catch (FileNotFoundException e) {
+            System.err.println("错误！文件不存在：" + convertConfig.sourceTxtFilePath);
+            System.err.println("程序异常退出");
+            System.exit(0);
+        }
+        while (sc.hasNextLine()){
+            res.put(lineNo++, sc.nextLine());
+        }
+        return res;
     }
 
     //过滤掉无效文本
@@ -121,15 +133,35 @@ public class TxtToJavaBean {
             return TxtLineType.COPY_START;
         } else if (line.startsWith("题名:") && context.getCurrentHandlePart() == CurrentHandlePart.COPY) {  //Book ISBN丢失的错误情况。
             return TxtLineType.BOOK_STARTER;
-        } else {
+        } else {    //版本号
+            /** 以下正则逻辑有问题 231113，改成判断下一行是不是'复本号:'
             String regex = "^[a-zA-Z0-9\\-./:\\s()=]+/[a-zA-Z0-9\\-./:\\s()=]+$";     //只包含字母/数字/./斜杠/冒号的，则是版本行
             Pattern pattern = Pattern.compile(regex);
             if(pattern.matcher(line).matches()){
 //                System.out.println(line);
                 return TxtLineType.VERSION_START;
             }
+            */
+            String nextLine = getNextValidLine(context, lineNo);
+            if(nextLine.trim().startsWith("复本号:")) {    //假设'副本号:x'的前一行，都是版本号。
+//                System.out.println(line);
+                return TxtLineType.VERSION_START;
+            }
         }
         return TxtLineType.NORMAL;  //默认返回normal
+    }
+
+    //获取原文里有效的下一行文本。如果没有，返回空字符串。
+    private String getNextValidLine(Context context, int lineNo){
+        Map<Integer, String> originBookContentMap = context.getOriginBookContentMap();
+        while (lineNo < originBookContentMap.size()) {
+            lineNo++;
+            String nextLine = originBookContentMap.get(lineNo).trim();
+            if (!isInvalidText(nextLine)) {
+                return nextLine;
+            }
+        }
+        return "";
     }
 
     //处理图书START文本
