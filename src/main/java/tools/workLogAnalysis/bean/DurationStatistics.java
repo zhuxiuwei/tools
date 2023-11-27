@@ -1,7 +1,10 @@
 package tools.workLogAnalysis.bean;
 
-public class Statistics {
-    public String date;
+/**
+ * 工作时长统计
+ */
+public class DurationStatistics {
+    public String date;     //时间维度
     public double projectTime;  //项目时间
     public double techTime;  //技术时间
     public double teamTime;  //团队时间
@@ -10,18 +13,9 @@ public class Statistics {
     public double totalTime;  //总计时间
     public double totalTime2;  //总计时间
     public boolean isHoliday;   //是否是休息日
+    public String heading;  //日志日期标题
 
-    public Statistics(){}
-    public Statistics(String date, double projectTime, double techTime, double teamTime, double productTime, double studyTime, double totalTime, boolean isHoliday) {
-        this.date = date;
-        this.projectTime = projectTime;
-        this.techTime = techTime;
-        this.teamTime = teamTime;
-        this.productTime = productTime;
-        this.studyTime = studyTime;
-        this.totalTime = totalTime;
-        this.isHoliday = isHoliday;
-    }
+    public DurationStatistics(){}
 
     public boolean validateTotalTime(){
         double diff = Math.abs(getTotalTimeBySub() - totalTime);
@@ -49,8 +43,9 @@ public class Statistics {
                 ", productTime=" + productTime +
                 ", studyTime=" + studyTime +
                 ", totalTime=" + totalTime +
-                ", totalTime2=" + totalTime2 +
+                ", totalTime2=" + getTotalTimeBySub() +
                 ", isHoliday=" + isHoliday +
+                ", heading=" + heading +
                 '}';
     }
 }

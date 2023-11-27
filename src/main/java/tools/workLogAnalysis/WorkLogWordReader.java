@@ -1,7 +1,7 @@
 package tools.workLogAnalysis;
 
 import org.apache.poi.xwpf.usermodel.*;
-import tools.workLogAnalysis.bean.Statistics;
+import tools.workLogAnalysis.bean.DurationStatistics;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,14 +14,14 @@ import java.util.*;
 public class WorkLogWordReader {
 
     private String processYear;
-    private Set<Statistics> result = new LinkedHashSet<>();
-    public Set<Statistics> readWord(String filePath){
+    private Set<DurationStatistics> result = new LinkedHashSet<>();
+    public Set<DurationStatistics> readWord(String filePath){
         System.out.println("--------------处理文件：" + filePath);
         processYear = null;
         try {
             FileInputStream fis = new FileInputStream(filePath);
             XWPFDocument document = new XWPFDocument(fis);
-            Statistics statistics = null;
+            DurationStatistics statistics = null;
 
             // 遍历所有体元素
             for (IBodyElement element : document.getBodyElements()) {
@@ -32,11 +32,11 @@ public class WorkLogWordReader {
                     XWPFParagraph paragraph = (XWPFParagraph) element;
                     String content  = paragraph.getText();
                     if ("1".equals(paragraph.getStyle())) {
-                        statistics = new Statistics();
+                        statistics = new DurationStatistics();
                         statistics.date=getDateFromFileNameAndHeading1(filePath, content);
                         if(isHoliday(content)){
-                            System.out.println("!!节假日：" + content);
-//                            statistics.isHoliday = true;
+                            statistics.isHoliday = true;
+                            statistics.heading = content;
                         }
                     }
                 }
@@ -77,6 +77,7 @@ public class WorkLogWordReader {
 
         //过滤掉empty的统计
         result.removeIf(statistics -> statistics.isEmpty());
+        result.stream().filter(x -> x.isHoliday).forEach(x -> System.out.println("!!节假日:" + x));
         return result;
     }
 
@@ -96,8 +97,8 @@ public class WorkLogWordReader {
     private boolean isHoliday(String dateStr){
         if(dateStr.contains("非假日") || dateStr.contains("非假期") || dateStr.contains("加班") )
             return false;
-        if(dateStr.contains("假") || dateStr.contains("国庆") || dateStr.contains("新年")
-                || dateStr.contains("周末") || dateStr.contains("春节") || dateStr.contains("元旦"))
+        if(dateStr.contains("假期") || dateStr.contains("国庆") || dateStr.contains("新年")
+                || dateStr.contains("周末") || dateStr.contains("春节") || dateStr.contains("元旦")|| dateStr.contains("(日)") || dateStr.contains("(6)"))
             return true;
         return false;
     }
