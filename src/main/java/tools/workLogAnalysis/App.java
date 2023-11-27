@@ -1,5 +1,6 @@
 package tools.workLogAnalysis;
 
+import tools.workLogAnalysis.analysis.WorkLogWordReader;
 import tools.workLogAnalysis.analysis.duration.DailyAnalysisWriter;
 import tools.workLogAnalysis.analysis.duration.MonthlyAnalysisWriter;
 import tools.workLogAnalysis.analysis.duration.QuarterlyAnalysisWriter;

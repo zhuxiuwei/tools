@@ -2,7 +2,7 @@ package tools;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import tools.workLogAnalysis.WorkLogWordReader;
+import tools.workLogAnalysis.analysis.WorkLogWordReader;
 
 
 public class WorkLogAnalysisTest {

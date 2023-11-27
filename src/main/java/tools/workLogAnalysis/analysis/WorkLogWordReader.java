@@ -1,4 +1,4 @@
-package tools.workLogAnalysis;
+package tools.workLogAnalysis.analysis;
 
 import org.apache.poi.xwpf.usermodel.*;
 import tools.workLogAnalysis.bean.DurationStatistics;
