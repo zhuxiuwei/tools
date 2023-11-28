@@ -77,7 +77,7 @@ public class WorkLogWordReader {
 
         //过滤掉empty的统计
         result.removeIf(statistics -> statistics.isEmpty());
-        result.stream().filter(x -> x.isHoliday).forEach(x -> System.out.println("!!节假日:" + x));
+        result.stream().filter(x -> x.isHoliday).forEach(x -> System.out.println("!!节假日:" + x));    //for debug
         return result;
     }
 

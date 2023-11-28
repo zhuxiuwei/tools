@@ -22,7 +22,7 @@ public abstract class BaseExcelWriter {
     public void writeStatisticsToExcel(Set<DurationStatistics> statisticsCollection, String excelFileName) {
         Workbook workbook = new XSSFWorkbook();
 
-        //数据按照日期维度，先分组
+        //数据按照日期维度，先分组。Key: 日期维度，value：归属此日期维度下的DurationStatistics集合
         LinkedHashMap<String, Set<DurationStatistics>> dateDimensionAndDataSetMap = new LinkedHashMap<>();
         statisticsCollection.stream().forEach(
                 statistics -> {

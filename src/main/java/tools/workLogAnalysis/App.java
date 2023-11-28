@@ -19,7 +19,7 @@ public class App {
         WorkLogWordReader workLogWordReader = new WorkLogWordReader();
         Set<DurationStatistics> rawData = new LinkedHashSet<>();
         for (int i = 2020; i <= 2023; i++) {
-            rawData.addAll(workLogWordReader.readWord("/Users/zhuxiuwei/Documents/个人/历年工作日志/" + i + "工作日志的副本.docx"));
+            rawData.addAll(workLogWordReader.readWord("/Users/zhuxiuwei/Documents/个人/历年工作日志/for 分析/" + i + "工作日志的副本.docx"));
         }
 
         //生成结果
