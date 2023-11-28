@@ -31,7 +31,7 @@ public class App {
         QuarterlyAnalysisWriter quarterlyAnalysisWriter = new QuarterlyAnalysisWriter();
         YearlyAnalysisWriter yearlyAnalysisWriter = new YearlyAnalysisWriter();
         String t = System.currentTimeMillis() + "";
-//        dailyAnalysisWriter.writeStatisticsToExcel(rawData,"日志分析-" + t + "-day.xlsx");
+        dailyAnalysisWriter.writeStatisticsToExcel(rawData,"日志分析-" + t + "-day.xlsx");
         monthlyAnalysisWriter.writeStatisticsToExcel(rawData,"日志分析-" + t + "-month.xlsx");
         quarterlyAnalysisWriter.writeStatisticsToExcel(rawData, "日志分析-" + t + "-quarter.xlsx");
         yearlyAnalysisWriter.writeStatisticsToExcel(rawData, "日志分析-" + t + "-year.xlsx");

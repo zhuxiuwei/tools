@@ -127,8 +127,10 @@ public abstract class BaseExcelWriter {
         // 3.3 将分组好的时长统计数据，转换为百分比统计数据
         Set<PercentageStatistics> groupedPercentageStatisticsSet = new LinkedHashSet<>();
         groupedDurationStatisticsSet.forEach(durationStatistics -> {
-            PercentageStatistics percentageStatistics = new PercentageStatistics(durationStatistics);
-            groupedPercentageStatisticsSet.add(percentageStatistics);
+            if(!durationStatistics.isEmpty()) {
+                PercentageStatistics percentageStatistics = new PercentageStatistics(durationStatistics);
+                groupedPercentageStatisticsSet.add(percentageStatistics);
+            }
         });
         // 3.4 写入excel
         groupedPercentageStatisticsSet.stream().forEach(statistics -> {
