@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import tools.workLogAnalysis.bean.DurationStatistics;
+import tools.workLogAnalysis.bean.PercentageStatistics;
 import tools.workLogAnalysis.bean.WorkOTStatistics;
 
 import java.io.FileOutputStream;
@@ -39,9 +40,9 @@ public abstract class BaseExcelWriter {
 
         /********************* 1. 时长数据。注意不包含节假日。 *********************/
         // 1.1 创建sheet
-        Sheet sheet = workbook.createSheet("时长");
+        Sheet durationSheet = workbook.createSheet("时长");
         // 1.2 创建表头
-        Row header = sheet.createRow(0);
+        Row header = durationSheet.createRow(0);
         header.createCell(0).setCellValue("日期");
         header.createCell(1).setCellValue("项目时间");
         header.createCell(2).setCellValue("技术时间");
@@ -51,7 +52,7 @@ public abstract class BaseExcelWriter {
         header.createCell(6).setCellValue("总时间");
         header.createCell(7).setCellValue("节假日");
         // 1.3 分组数据进行聚合计算
-        Set<DurationStatistics> groupedStatisticsSet = new LinkedHashSet<>();
+        Set<DurationStatistics> groupedDurationStatisticsSet = new LinkedHashSet<>();
         dateDimensionAndDataSetMap.keySet().stream().forEach(dateDimension ->{
             DurationStatistics groupedStatistics = new DurationStatistics();
             groupedStatistics.date = dateDimension;
@@ -68,14 +69,14 @@ public abstract class BaseExcelWriter {
             groupedStatistics.productTime = avgProductTime;
             groupedStatistics.studyTime = avgStudyTime;
             groupedStatistics.totalTime = avgTotalTime;
-            groupedStatisticsSet.add(groupedStatistics);
+            groupedDurationStatisticsSet.add(groupedStatistics);
         });
         // 1.4 写入excel
-        groupedStatisticsSet.stream().forEach(statistics -> {
+        groupedDurationStatisticsSet.stream().forEach(statistics -> {
             if(statistics.isEmpty()){
                 System.out.println("总时长为0，跳过: " + statistics);
             }else {
-                Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+                Row row = durationSheet.createRow(durationSheet.getLastRowNum() + 1);
                 row.createCell(0).setCellValue(statistics.date);
                 row.createCell(1).setCellValue(statistics.projectTime);
                 row.createCell(2).setCellValue(statistics.techTime);
@@ -112,14 +113,40 @@ public abstract class BaseExcelWriter {
             row.createCell(2).setCellValue(statistics.otTime);
         });
 
-        // 3. 写入文件
+        /********************* 3. 各项百分比数据。 *********************/
+        // 3.1 创建sheet
+        Sheet percentageSheet = workbook.createSheet("百分比");
+        // 3.2 创建表头
+        Row percentageHeader = percentageSheet.createRow(0);
+        percentageHeader.createCell(0).setCellValue("时间");
+        percentageHeader.createCell(1).setCellValue("项目占比");
+        percentageHeader.createCell(2).setCellValue("技术占比");
+        percentageHeader.createCell(3).setCellValue("团队占比");
+        percentageHeader.createCell(4).setCellValue("产品占比");
+        percentageHeader.createCell(5).setCellValue("自我提升占比");
+        // 3.3 将分组好的时长统计数据，转换为百分比统计数据
+        Set<PercentageStatistics> groupedPercentageStatisticsSet = new LinkedHashSet<>();
+        groupedDurationStatisticsSet.forEach(durationStatistics -> {
+            PercentageStatistics percentageStatistics = new PercentageStatistics(durationStatistics);
+            groupedPercentageStatisticsSet.add(percentageStatistics);
+        });
+        // 3.4 写入excel
+        groupedPercentageStatisticsSet.stream().forEach(statistics -> {
+            Row row = percentageSheet.createRow(percentageSheet.getLastRowNum() + 1);
+            row.createCell(0).setCellValue(statistics.date);
+            row.createCell(1).setCellValue(statistics.projectTimePart);
+            row.createCell(2).setCellValue(statistics.techTimePart);
+            row.createCell(3).setCellValue(statistics.teamTimePart);
+            row.createCell(4).setCellValue(statistics.productTimePart);
+            row.createCell(5).setCellValue(statistics.studyTimePart);
+        });
+        // 4. 写入文件
         try (FileOutputStream fileOut = new FileOutputStream(excelFileName)) {
             workbook.write(fileOut);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     //生成日期维度，用于分组。
     public abstract String dateDimensionGenerator(DurationStatistics statistics);

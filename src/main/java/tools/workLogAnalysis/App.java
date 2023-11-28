@@ -7,6 +7,8 @@ import tools.workLogAnalysis.analysis.duration.QuarterlyAnalysisWriter;
 import tools.workLogAnalysis.analysis.duration.YearlyAnalysisWriter;
 import tools.workLogAnalysis.bean.DurationStatistics;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -21,6 +23,7 @@ public class App {
         for (int i = 2020; i <= 2023; i++) {
             rawData.addAll(workLogWordReader.readWord("/Users/zhuxiuwei/Documents/个人/历年工作日志/for 分析/" + i + "工作日志的副本.docx"));
         }
+        rawData = Collections.unmodifiableSet(rawData);
 
         //生成结果
         DailyAnalysisWriter dailyAnalysisWriter = new DailyAnalysisWriter();
