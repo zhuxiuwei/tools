@@ -1,8 +1,8 @@
 # 原始txt文件地址
-sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/发给史老师.txt"
+sourceTxtFilePath: "E:\\冯1129.txt"
 
 # 生成目标excel文件的目录地址
-targetExcelPath: "/Users/zhuxiuwei/Downloads"
+targetExcelPath: "E:\\"
 
 # 一个字段有多个值，合并成一个值时的分隔符。
 combineMultipleValuesToOneValueDelimiter: ","
