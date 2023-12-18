@@ -133,7 +133,8 @@ public class ExcelCreator {
         }
 
         // 保存Excel文件
-        String excelPath = convertConfig.targetExcelPath + File.separator + "图书txt信息转excel-" + System.currentTimeMillis() + ".xlsx";
+        String excelPath = convertConfig.targetExcelPath + File.separator + getFileNameFromFullPath(convertConfig.sourceTxtFilePath)
+                + "-" + System.currentTimeMillis() + ".xlsx";
         try (FileOutputStream outputStream = new FileOutputStream(excelPath)) {
             workbook.write(outputStream);
         } catch (IOException e) {
@@ -142,5 +143,12 @@ public class ExcelCreator {
             System.exit(0);
         }
         return excelPath;
+    }
+
+    private String getFileNameFromFullPath(String fullPath){
+        int idx = fullPath.lastIndexOf(File.separatorChar) + 1;
+        String pathWithExtension = fullPath.substring(idx);
+        idx = pathWithExtension.lastIndexOf(".");
+        return pathWithExtension.substring(0, idx);
     }
 }
