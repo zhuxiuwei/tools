@@ -93,7 +93,7 @@ public class bookTxt2ExcelTest {
 
         v2.setCopies(asList(copy2_1, copy2_2));
 
-        return new BookWithStingFields(book);
+        return new BookWithStingFields(book,",");
     }
 
     //版本号正则测试。231113：用正则判断版本号，已弃用。

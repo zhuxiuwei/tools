@@ -5,6 +5,7 @@ import tools.bookTxt2Excel.bean.BookWithStingFields;
 import tools.bookTxt2Excel.bean.Copy;
 import tools.bookTxt2Excel.bean.Version;
 import tools.bookTxt2Excel.config.ConvertConfig;
+import tools.bookTxt2Excel.config.YamlConfigParser;
 import tools.bookTxt2Excel.service.enums.CurrentHandlePart;
 import tools.bookTxt2Excel.service.enums.TxtLineType;
 
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
 public class TxtToJavaBean {
 
     private ConvertConfig convertConfig;
+    private int debugLine=700248;   //用于Debug的行
 
     public TxtToJavaBean(ConvertConfig convertConfig){
         this.convertConfig = convertConfig;
@@ -29,7 +31,7 @@ public class TxtToJavaBean {
      * 输入txt文件地址，将txt转换为Book对象
      * @return Book对象列表
      */
-    public List<BookWithStingFields> txt2Books() {
+    public List<BookWithStingFields> txt2Books() throws IOException, ClassNotFoundException {
         Context context = new Context();
         //保存<行号:原文> map到context，然后处理原文。
         Map<Integer, String> rawContentMap = originBookContentMap();
@@ -41,9 +43,11 @@ public class TxtToJavaBean {
         //Book转BookWithStingFields
         List<Book> books = context.getBookData();
         List<BookWithStingFields> res = new ArrayList<>();
+        ConvertConfig convertConfig = YamlConfigParser.parseConfig("tools/BookTxt2ExcelConfig.yaml");
+        String delimiter = convertConfig.getCombineMultipleValuesToOneValueDelimiter();
         books.forEach(book -> {
             try {
-                BookWithStingFields bookWithStingFields = new BookWithStingFields(book);
+                BookWithStingFields bookWithStingFields = new BookWithStingFields(book, delimiter);
                 res.add(bookWithStingFields);
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -57,9 +61,9 @@ public class TxtToJavaBean {
     private void handleTxtSingleLine(Context context, String line, int lineNo){
         if(isInvalidText(line))
             return;
-//        if(lineNo == 80){  //for debug
-//            System.out.println("");
-//        }
+        if(lineNo == debugLine){  //for debug
+            System.out.println("");
+        }
         TxtLineType currentTxtLineType = getCurrentTxtLineType(context, line, lineNo);
 //        System.out.println(lineNo + ":" + line + ": " + currentTxtLineType);  //for debug
         switch (currentTxtLineType){
@@ -127,7 +131,16 @@ public class TxtToJavaBean {
         }
         else if(line.startsWith("复本号:")){   //'复本号:'开头的，是拷贝行
             return TxtLineType.COPY_START;
-        } else if (line.startsWith("题名:") && context.getCurrentHandlePart() == CurrentHandlePart.COPY) {  //Book ISBN丢失的错误情况。
+        } else if ((line.startsWith("题名:") || line.startsWith("个人名称－等同知识责任:"))
+                && (context.getCurrentHandlePart() == CurrentHandlePart.COPY || context.getCurrentHandlePart() == CurrentHandlePart.NONE)) {
+            /**
+             * Book ISBN丢失的错误情况。
+             * 注意这里有个假定逻辑：一本书的开头部分，如果ISBN丢了，则以【题名】或者【个人名称－等同知识责任】开头。
+             * ！！！这里每加一种属性，记得需要对应修改handleBookStart方法！！！！ 比较ugly的逻辑！！！！
+             * TODO: 如果后续有有更多其他情况，这里还是会处理错误。需要更健壮的写法。
+             * 这里的错误，指的是类似下面的报错：把本属于Book的行，归纳成属于copy了。
+             * '异常 - 未知的copy属性！ 行1172: 个人名称－等同知识责任: Mao, Tse-Tung, 1893-1976.'
+             */
             return TxtLineType.BOOK_STARTER;
         } else {    //版本号
             /** 以下正则逻辑有问题 231113，改成判断下一行是不是'复本号:'
@@ -181,6 +194,10 @@ public class TxtToJavaBean {
             line = line.replace("题名:", "").trim();
             book.get题名().add(line);
             context.setLastHandleBookFiled("题名");
+        }else if(line.startsWith("个人名称－等同知识责任:")){
+            line = line.replace("个人名称－等同知识责任:", "").trim();
+            book.get个人名称等同知识责任().add(line);
+            context.setLastHandleBookFiled("个人名称等同知识责任");
         }
         context.setCurrentHandlePart(CurrentHandlePart.BOOK);
     }

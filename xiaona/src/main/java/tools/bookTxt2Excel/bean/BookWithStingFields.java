@@ -36,10 +36,7 @@ public class BookWithStingFields implements ConvertableToExcel{
     private String delimiter;
 
     //利用反射，将Book里的list值，转成字符串，用delimiter分隔
-    public BookWithStingFields(Book book) throws IllegalAccessException, NoSuchFieldException, IOException, ClassNotFoundException {
-        ConvertConfig convertConfig = YamlConfigParser.parseConfig("tools/BookTxt2ExcelConfig.yaml");
-        delimiter = convertConfig.getCombineMultipleValuesToOneValueDelimiter();
-
+    public BookWithStingFields(Book book, String delimiter) throws IllegalAccessException, NoSuchFieldException, IOException, ClassNotFoundException {
         Field[] listFields = book.getClass().getDeclaredFields();
         for(Field listField: listFields){
             listField.setAccessible(true);
