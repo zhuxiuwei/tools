@@ -1,5 +1,5 @@
 # 原始txt文件地址
-sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/马克思主义学院总书单111.txt"
+sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/藏书馆312 西文图书.txt"
 
 # 生成目标excel文件的目录地址
 targetExcelPath: "/Users/zhuxiuwei/Downloads"

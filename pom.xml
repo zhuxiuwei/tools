@@ -23,6 +23,7 @@
     </build>
     <modules>
         <module>xiaona</module>
+        <module>office_ones_statistics</module>
     </modules>
 
     <dependencies>
