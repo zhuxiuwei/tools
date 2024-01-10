@@ -1,5 +1,7 @@
 package com.zxw.bean;
 
+import com.zxw.service.Rules;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,7 +10,7 @@ import java.util.Set;
 /**
  * ONES需求 -- 被分析过的
  */
-public class OnesReqAnalyzed {
+public class OnesReqAnalyzed implements Comparable<OnesReqAnalyzed>{
     public String reqId;
     public String reqName;
     public String state;
@@ -18,6 +20,8 @@ public class OnesReqAnalyzed {
     public String createdBy;
     public String assigned;
     public String createdAt;
+
+    public String 开发人员多选;
 
     public Map<String, CellValueWithStyle> cellValues = new HashMap<>();
     public Map<String, Emp> emps = new HashMap<>();
@@ -32,6 +36,7 @@ public class OnesReqAnalyzed {
         this.createdBy = onesReq.getCreatedBy();
         this.assigned = onesReq.getAssigned();
         this.createdAt = onesReq.getCreatedAt();
+        this.开发人员多选 = onesReq.get开发人员多选();
         cellValues.put("提出时间", new CellValueWithStyle("提出时间", onesReq.get提出时间()));
         cellValues.put("需求澄清日期", new CellValueWithStyle("需求澄清日期", onesReq.get需求澄清日期()));
         cellValues.put("PRD终审通过时间", new CellValueWithStyle("PRD终审通过时间", onesReq.getPRD终审通过时间()));
@@ -44,7 +49,6 @@ public class OnesReqAnalyzed {
         cellValues.put("测试主R", new CellValueWithStyle("测试主R", onesReq.get测试主R()));
         cellValues.put("产品主R", new CellValueWithStyle("产品主R", onesReq.get产品主R()));
         cellValues.put("是否QA测试", new CellValueWithStyle("是否QA测试", onesReq.get是否QA测试()));
-        cellValues.put("开发人员多选", new CellValueWithStyle("开发人员多选", onesReq.get开发人员多选()));
 
         this.emps = emps;
 
@@ -53,38 +57,43 @@ public class OnesReqAnalyzed {
     }
 
     public boolean isBackendInvolved;  //是否是后端参与的需求
-    public Set<String> backendInvolvedMisId = new HashSet<>();  //后端参与的需求的misId
-    public Set<String> backendInvolvedReason = new HashSet<>();  //后端参与的原因
+    public Set<String> backendInvolvedMisId = new HashSet<>();  //后端参与的需求的misId合集
+    public Set<String> backendInvolvedReason = new HashSet<>();  //后端参与的原因合集
+    public Set<String> backendInvolvedOrgPaths = new HashSet<>();  //后端参与的组织合集
+
 
     //添加需求后端参与情况
     private void setBackendInvolveInfo(){
         //先看指派给
 //        System.out.println("指派给");
-        if(this.reqId.equals("83000058")){
-            System.out.println(1);
-        }
+//        if(this.reqId.equals("83000058")){
+//            System.out.println(1);
+//        }
         Emp assigned = emps.get(this.assigned);
         if(assigned != null && assigned.isEmpBackendTeam()) {
             isBackendInvolved = true;
             backendInvolvedMisId.add(assigned.getMisId());
             backendInvolvedReason.add("指派给");
+            backendInvolvedOrgPaths.add(assigned.getOrgFullPath());
         }
         //再看技术主R
 //        System.out.println("技术主R");
         Emp 技术主R = emps.get(cellValues.get("技术主R").getCellValue());
         if(技术主R != null && 技术主R.isEmpBackendTeam()) {
             isBackendInvolved =  true;
-            backendInvolvedMisId.add(assigned.getMisId());
+            backendInvolvedMisId.add(技术主R.getMisId());
             backendInvolvedReason.add("技术主R");
+            backendInvolvedOrgPaths.add(技术主R.getOrgFullPath());
         }
-        String[] 开发人员多选s = cellValues.get("开发人员多选").getCellValue().split(",");
+        String[] 开发人员多选s = 开发人员多选.split(",");
 //        System.out.println("开发人员多选s");
         for(String 开发人员多选: 开发人员多选s){
             Emp 开发人员多选Emp = emps.get(开发人员多选);
             if (开发人员多选Emp != null && 开发人员多选Emp.isEmpBackendTeam()) {
                 isBackendInvolved = true;
-                backendInvolvedMisId.add(assigned.getMisId());
+                backendInvolvedMisId.add(开发人员多选Emp.getMisId());
                 backendInvolvedReason.add("开发人员多选");
+                backendInvolvedOrgPaths.add(开发人员多选Emp.getOrgFullPath());
             }
         }
     }
@@ -94,6 +103,21 @@ public class OnesReqAnalyzed {
         System.out.println("===Backend Involved: " + isBackendInvolved);
         System.out.println("===Backend Involved MisId: " + backendInvolvedMisId);
         System.out.println("===Backend Involved Reason: " + backendInvolvedReason);
+        System.out.println("===Backend Involved Org FullPath: " + backendInvolvedOrgPaths);
+    }
+
+    public void printBackendWarnInfo(){
+        if(backendInvolvedOrgPaths.size() > 1) {
+            System.err.println("WARING: 以下需求有多个后端组参加：reqId: " + this.reqId);
+            System.err.println("===Backend Involved: " + isBackendInvolved);
+            System.err.println("===Backend Involved MisId: " + backendInvolvedMisId);
+            System.err.println("===Backend Involved Reason: " + backendInvolvedReason);
+            System.err.println("===Backend Involved Org FullPath: " + backendInvolvedOrgPaths);
+        }
+    }
+
+    public String genOnesReqLink(){
+        return "https://ones.sankuai.com/ones/product/" + this.spaceId +  "/workItem/requirement/detail/" + reqId;
     }
 
     @Override
@@ -109,10 +133,32 @@ public class OnesReqAnalyzed {
                 ", assigned='" + assigned + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", cellValues=" + cellValues +
-                ", emps=" + emps +
+                ", 开发人员多选=" + 开发人员多选 +
                 ", isBackendInvolved=" + isBackendInvolved +
                 ", backendInvolvedMisId='" + backendInvolvedMisId + '\'' +
                 ", backendInvolvedReason='" + backendInvolvedReason + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(OnesReqAnalyzed o) {
+//        int result = this.backendInvolvedOrgPaths.toString().compareTo(o.backendInvolvedOrgPaths.toString());
+//        if (result != 0) {
+//            return result;
+//        }else {
+//            result = this.subtypeName.compareTo(o.subtypeName);
+//        } if (result != 0) {
+//            return result;
+//        }else {
+//            Rules rules = new Rules();
+//            return rules.getStateIdx(this.subtypeName, this.state) - rules.getStateIdx(o.subtypeName, o.state);
+//        }
+        int result = this.backendInvolvedOrgPaths.toString().compareTo(o.backendInvolvedOrgPaths.toString());
+        if (result != 0) {
+            return result;
+        }else {
+            Rules rules = new Rules();
+            return rules.getStateIdx("产品需求通用-办公新", this.state) - rules.getStateIdx("产品需求通用-办公新", o.state);
+        }
     }
 }

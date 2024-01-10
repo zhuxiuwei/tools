@@ -2,13 +2,14 @@ package com.zxw;
 
 import com.zxw.bean.Emp;
 import com.zxw.bean.OnesReq;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import com.zxw.bean.OnesReqAnalyzed;
+import com.zxw.service.AnalyzeReq;
+import com.zxw.service.ExcelCreator;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +31,12 @@ public class App
 
         //分析excel
         AnalyzeReq analyzeReq = new AnalyzeReq(emps, reqs);
-        analyzeReq.analyze();
+        //对每条需求的关键字段，判断数据完整性信息。然后返回填充了完整度信息的需求列表。
+        List<OnesReqAnalyzed> reqListWithFiledCompletenessInfo = analyzeReq.getReqListWithFiledCompletenessInfo();
+        //完整度信息，写excel
+        ExcelCreator excelCreator = new ExcelCreator();
+        String excelPath = excelCreator.saveReqListWithFiledCompletenessInfoToExcel(reqListWithFiledCompletenessInfo);
+        System.out.println("需求完整度信息已生成excel，路径为：" + excelPath);
     }
 
     private List<Emp> readEmpExcel(String empExcel) throws IOException {
@@ -117,13 +123,13 @@ public class App
             onesReq.set是否QA测试(是否QA测试);
             onesReq.set开发人员多选(开发人员多选);
             empList.add(onesReq);
-
         }
         return empList;
     }
 
     public static void main(String[] args) throws IOException {
-        String onesReqExcel = "/Volumes/文枢工作空间/需求列表-22的副本.xlsx";
+//        String onesReqExcel = "/Volumes/文枢工作空间/需求列表-22的副本.xlsx";
+        String onesReqExcel = "/Volumes/文枢工作空间/需求列表-786512545-1704804306020的副本.xlsx";
         String empExcel = "/Volumes/文枢工作空间/办公组织信息-786551745-1704804276866.xlsx";
         App app = new App();
         app.process(onesReqExcel, empExcel);
