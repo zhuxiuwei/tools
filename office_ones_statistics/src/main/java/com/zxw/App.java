@@ -4,7 +4,7 @@ import com.zxw.bean.Emp;
 import com.zxw.bean.OnesReq;
 import com.zxw.bean.OnesReqAnalyzed;
 import com.zxw.bean.OrgLevelStatistics;
-import com.zxw.service.AnalyzeReq;
+import com.zxw.service.AnalyzeReqColumnFillRate;
 import com.zxw.service.ExcelCreator;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -32,18 +32,18 @@ public class App
         System.out.println("Data received!");
 
         //2、分析需求完整性
-        AnalyzeReq analyzeReq = new AnalyzeReq(emps, reqs);
+        AnalyzeReqColumnFillRate analyzeReqColumnFillRate = new AnalyzeReqColumnFillRate(emps, reqs);
 
         //2.1、需求级分析
         //对每条需求的关键字段，判断数据完整性信息。然后返回填充了完整度信息的需求列表。
-        List<OnesReqAnalyzed> reqListWithFiledCompletenessInfo = analyzeReq.getReqListWithFiledCompletenessInfo();
+        List<OnesReqAnalyzed> reqListWithFiledCompletenessInfo = analyzeReqColumnFillRate.getReqListWithFiledCompletenessInfo();
         //需求粒度的完整度信息写excel
         ExcelCreator excelCreator = new ExcelCreator();
         String excelPath = excelCreator.saveReqListWithFiledCompletenessInfoToExcel(reqListWithFiledCompletenessInfo);
         System.out.println("需求完整度信息已生成excel，路径为：" + excelPath);
 
         //2.2 统计维度的分析
-        Map<String, Map<String, OrgLevelStatistics>> orgLevelStatistics = analyzeReq.getOrgLevelStatistics(reqListWithFiledCompletenessInfo);
+        Map<String, Map<String, OrgLevelStatistics>> orgLevelStatistics = analyzeReqColumnFillRate.getOrgLevelStatistics(reqListWithFiledCompletenessInfo);
         //统计维度的完整度信息写excel
         excelPath = excelCreator.saveOrgLevelStatisticsToExcel(orgLevelStatistics);
         System.out.println("统计维度完整度信息已生成excel，路径为：" + excelPath);

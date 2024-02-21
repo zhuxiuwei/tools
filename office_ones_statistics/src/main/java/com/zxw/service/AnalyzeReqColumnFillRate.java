@@ -6,13 +6,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 分析需求情况主逻辑
+ * 分析需求字段填写率情况主逻辑
  */
-public class AnalyzeReq {
+public class AnalyzeReqColumnFillRate {
     private List<Emp> emps;
     private List<OnesReq> originalReqs;
 
-    public AnalyzeReq(List<Emp> emps, List<OnesReq> reqs) {
+    public AnalyzeReqColumnFillRate(List<Emp> emps, List<OnesReq> reqs) {
         this.emps = emps;
         this.originalReqs = reqs;
     }

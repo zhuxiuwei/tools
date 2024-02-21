@@ -28,6 +28,7 @@ public class OrgTotalFillRateTuple implements Comparable<OrgTotalFillRateTuple>{
         this.fillRate = fillRate;
     }
 
+    //排序规则：整体填写率高的组织放前面；「总体（即办公效率后端总体）」组织永远放最后面。
     @Override
     public int compareTo(OrgTotalFillRateTuple o) {
         if(this.orgName.equals("总体"))
