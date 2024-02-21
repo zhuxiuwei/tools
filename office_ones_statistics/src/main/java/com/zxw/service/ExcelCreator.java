@@ -227,6 +227,7 @@ public class ExcelCreator {
             //「应该填写数」 行
             Cell cell = dataRow.createCell(columnIdx++);
             cell.setCellValue(orgName);
+            setCellStyle(workbook, cell, getColorForString(orgName), IndexedColors.WHITE.getIndex());
             cell = dataRow.createCell(1);
             cell.setCellValue("应该填写数");
             for (String columnName: dataHeaders){
@@ -238,6 +239,7 @@ public class ExcelCreator {
             columnIdx = 0;
             dataRow = sheet.createRow(rowIdx.incrementAndGet());
             cell = dataRow.createCell(columnIdx++);
+            setCellStyle(workbook, cell, getColorForString(orgName), IndexedColors.WHITE.getIndex());
             cell.setCellValue(orgName);
             cell = dataRow.createCell(1);
             cell.setCellValue("实际填写数");
@@ -250,6 +252,7 @@ public class ExcelCreator {
             columnIdx = 0;
             dataRow = sheet.createRow(rowIdx.incrementAndGet());
             cell = dataRow.createCell(columnIdx++);
+            setCellStyle(workbook, cell, getColorForString(orgName), IndexedColors.WHITE.getIndex());
             cell.setCellValue(orgName);
             cell = dataRow.createCell(1);
             cell.setCellValue("填写占比");
