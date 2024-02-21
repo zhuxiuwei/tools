@@ -2,6 +2,7 @@ package com.zxw.service;
 
 import com.zxw.bean.CellValueWithStyle;
 import com.zxw.bean.OnesReqAnalyzed;
+import com.zxw.bean.OrgLevelStatistics;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
@@ -14,8 +15,9 @@ import java.util.*;
 public class ExcelCreator {
 
     /**
+     * 需求维度统计信息写excel
      * 将保存了每条需求的关键字段及其数据完整性信息的需求列表写入excel。
-     * @return
+     * @return excel地址
      */
     public String saveReqListWithFiledCompletenessInfoToExcel(List<OnesReqAnalyzed> reqAnalyzedList){
         Workbook workbook = new XSSFWorkbook();
@@ -73,8 +75,7 @@ public class ExcelCreator {
                         cell.setCellValue(analyzed.backendInvolvedReason.toString().replace("[", "").replace("]", ""));
                         break;
                     case "后端参与人组织":
-                        cell.setCellValue(analyzed.backendInvolvedOrgPaths.toString().replace("[", "").replace("]", "")
-                                .replace("/美团点评/基础研发平台/企业平台研发部/办公效率/办公效率后端/", ""));
+                        cell.setCellValue(analyzed.getBackendInvolvedOrgName());
                         setCellStyle(workbook, cell, getColorForString(analyzed.backendInvolvedOrgPaths.toString()), IndexedColors.WHITE.getIndex());
                         break;
                     case "提出时间":
@@ -145,7 +146,7 @@ public class ExcelCreator {
         }
 
         // 保存Excel文件
-        String excelPath = "/Users/zhuxiuwei/Documents/Ones填写分析"+ "-" + System.currentTimeMillis() + ".xlsx";
+        String excelPath = "/Users/zhuxiuwei/Documents/Ones填写分析-需求维度"+ "-" + System.currentTimeMillis() + ".xlsx";
         try (FileOutputStream outputStream = new FileOutputStream(excelPath)) {
             workbook.write(outputStream);
         } catch (IOException e) {
@@ -191,4 +192,68 @@ public class ExcelCreator {
         cell.setCellStyle(style); // 应用样式到单元格
     }
 
+    /**
+     * 组织维度的统计信息写excel
+     * @param orgLevelStatistics
+     * @return excel地址
+     */
+    public String saveOrgLevelStatisticsToExcel(Map<String, Map<String, OrgLevelStatistics>> orgLevelStatistics){
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Sheet1");
+        // 创建表头
+        List<String> excelHeaders = Arrays.asList("提出时间","需求澄清日期","PRD终审通过时间","技术评审结束时间",
+                "预计上线时间","实际提测时间","实际测试结束时间","实际上线时间","技术主R","测试主R","产品主R","是否QA测试","整体填写率");
+        Row headerRow = sheet.createRow(0);
+        Cell headerCell = headerRow.createCell(0);
+        headerCell.setCellValue("组织");
+        headerCell = headerRow.createCell(1);
+        headerCell.setCellValue("类型");
+        for (int i = 0; i < excelHeaders.size(); i++) {
+            headerCell = headerRow.createCell(i + 2);
+            headerCell.setCellValue(excelHeaders.get(i));
+        }
+
+        //填充数据
+        orgLevelStatistics.forEach((orgName, fieldLevelStatistics) -> {
+            int rowIdx = 0, columnIdx = 0;
+            Map<String, OrgLevelStatistics> filedLevelStatistic = orgLevelStatistics.get(orgName);
+            Row dataRow = sheet.createRow(++ rowIdx);
+            //组织名
+            Cell cell = dataRow.createCell(columnIdx++);
+            cell.setCellValue(orgName);
+            //应该填写
+            cell = dataRow.createCell(1);
+            cell.setCellValue("应该填写数");
+            for (String columnName: excelHeaders){
+                cell = dataRow.createCell(columnIdx++);
+                cell.setCellValue(fieldLevelStatistics.get(columnName).shouldFillCount);
+            }
+
+            //实际填写
+            dataRow = sheet.createRow(++ rowIdx);
+            cell = dataRow.createCell(1);
+            cell.setCellValue("实际填写数");
+            for (String columnName: excelHeaders){
+                cell = dataRow.createCell(columnIdx++);
+                cell.setCellValue(fieldLevelStatistics.get(columnName).actualFillCount);
+            }
+
+            //填写占比
+            dataRow = sheet.createRow(++ rowIdx);
+            cell = dataRow.createCell(1);
+            cell.setCellValue("填写占比");
+            for (String columnName: excelHeaders){
+                cell = dataRow.createCell(columnIdx++);
+                cell.setCellValue(fieldLevelStatistics.get(columnName).actualFillCount);
+            }
+        });
+        String excelPath = "/Users/zhuxiuwei/Documents/Ones填写分析-组织维度"+ "-" + System.currentTimeMillis() + ".xlsx";
+        try (FileOutputStream outputStream = new FileOutputStream(excelPath)) {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("保存excel文件失败到路径失败：" + excelPath + ", 程序异常退出。");
+            System.exit(0);
+        }
+        return excelPath;    }
 }

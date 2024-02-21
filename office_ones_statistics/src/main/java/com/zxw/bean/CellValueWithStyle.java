@@ -10,6 +10,7 @@ import java.util.Locale;
 public class CellValueWithStyle {
     private String cellName;
     private String cellValue;
+    private boolean shouldBeFilled = false; //是否应该被填写，默认false
     private short fontColor = IndexedColors.BLACK.getIndex(); //字体色，默认黑
     private short cellBackgroundColor = IndexedColors.WHITE.getIndex();     //单元格背景色，默认白
 
@@ -28,11 +29,23 @@ public class CellValueWithStyle {
         this.fontColor = IndexedColors.RED.getIndex();
     }
 
+    //设置正常的背景色
+    public void setNormalBackground(){
+        this.cellBackgroundColor = IndexedColors.WHITE.getIndex();
+    }
+
+    //设置正常的字体颜色
+    public void setNormalFont(){
+        this.fontColor = IndexedColors.BLACK.getIndex();
+    }
+
+    //是否是空值
     public boolean isEmptyCellValue(){
-        if(cellValue == null || cellValue.isEmpty() || cellValue.trim().toLowerCase().equals("null"))
+        if(cellValue == null || cellValue.isEmpty() || cellValue.trim().equalsIgnoreCase("null"))
             return true;
         return false;
     }
+
 
     public String getCellName() {
         return cellName;
@@ -66,11 +79,20 @@ public class CellValueWithStyle {
         this.cellBackgroundColor = cellBackgroundColor;
     }
 
+    public boolean isShouldBeFilled() {
+        return shouldBeFilled;
+    }
+
+    public void setShouldBeFilled(boolean shouldBeFilled) {
+        this.shouldBeFilled = shouldBeFilled;
+    }
+
     @Override
     public String toString() {
         return "CellValueWithStyle{" +
                 "cellName='" + cellName + '\'' +
                 ", cellValue='" + cellValue + '\'' +
+                ", shouldBeFilled='" + shouldBeFilled + '\'' +
                 ", fontColor=" + fontColor +
                 ", cellBackgroundColor=" + cellBackgroundColor +
                 '}';

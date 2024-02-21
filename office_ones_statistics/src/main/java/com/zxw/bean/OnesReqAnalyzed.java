@@ -49,26 +49,26 @@ public class OnesReqAnalyzed implements Comparable<OnesReqAnalyzed>{
         cellValues.put("测试主R", new CellValueWithStyle("测试主R", onesReq.get测试主R()));
         cellValues.put("产品主R", new CellValueWithStyle("产品主R", onesReq.get产品主R()));
         cellValues.put("是否QA测试", new CellValueWithStyle("是否QA测试", onesReq.get是否QA测试()));
-
         this.emps = emps;
-
         //后端参与情况
         this.setBackendInvolveInfo();
     }
 
+    /** 后端参与情况 **/
     public boolean isBackendInvolved;  //是否是后端参与的需求
     public Set<String> backendInvolvedMisId = new HashSet<>();  //后端参与的需求的misId合集
     public Set<String> backendInvolvedReason = new HashSet<>();  //后端参与的原因合集
     public Set<String> backendInvolvedOrgPaths = new HashSet<>();  //后端参与的组织合集
-
+    private String backendInvolvedOrgName;   //后端参与组织名，由backendInvolvedOrgPaths精简而来。
+    public String getBackendInvolvedOrgName(){
+        return backendInvolvedOrgPaths.toString().replace("[", "").replace("]", "")
+                .replace("/美团点评/基础研发平台/企业平台研发部/办公效率/办公效率后端/", "")
+                .replace("/", "");
+    }
 
     //添加需求后端参与情况
     private void setBackendInvolveInfo(){
         //先看指派给
-//        System.out.println("指派给");
-//        if(this.reqId.equals("83000058")){
-//            System.out.println(1);
-//        }
         Emp assigned = emps.get(this.assigned);
         if(assigned != null && assigned.isEmpBackendTeam()) {
             isBackendInvolved = true;

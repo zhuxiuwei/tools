@@ -50,7 +50,7 @@ public class Rules {
         fieldFirstShouldNotEmptyStateMap_Common.put("技术主R", "待技术方案设计");
 
         //产品需求特有
-        fieldFirstShouldNotEmptyStateMap_ProdReq.put("提出时间", "待规划");
+        fieldFirstShouldNotEmptyStateMap_ProdReq.put("提出时间", "待规划"); 
         fieldFirstShouldNotEmptyStateMap_ProdReq.put("需求澄清日期", "产品方案设计中");
         fieldFirstShouldNotEmptyStateMap_ProdReq.put("PRD终审通过时间", "待技术方案设计");
         fieldFirstShouldNotEmptyStateMap_ProdReq.put("产品主R", "待规划");

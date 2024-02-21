@@ -3,6 +3,7 @@ package com.zxw;
 import com.zxw.bean.Emp;
 import com.zxw.bean.OnesReq;
 import com.zxw.bean.OnesReqAnalyzed;
+import com.zxw.bean.OrgLevelStatistics;
 import com.zxw.service.AnalyzeReq;
 import com.zxw.service.ExcelCreator;
 import org.apache.poi.ss.usermodel.*;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Hello world!
@@ -21,7 +23,7 @@ import java.util.List;
 public class App 
 {
     public void process(String onesReqExcel, String empExcel) throws IOException {
-        //读取excel
+        //1、读取需求和员工信息
         System.out.println("Getting data...");
         List<Emp> emps = readEmpExcel(empExcel);
         System.out.println("读取" + emps.size() + "条员工信息。");
@@ -29,14 +31,22 @@ public class App
         System.out.println("读取" + reqs.size() + "条需求信息。");
         System.out.println("Data received!");
 
-        //分析excel
+        //2、分析需求完整性
         AnalyzeReq analyzeReq = new AnalyzeReq(emps, reqs);
+
+        //2.1、需求级分析
         //对每条需求的关键字段，判断数据完整性信息。然后返回填充了完整度信息的需求列表。
         List<OnesReqAnalyzed> reqListWithFiledCompletenessInfo = analyzeReq.getReqListWithFiledCompletenessInfo();
-        //完整度信息，写excel
+        //需求粒度的完整度信息写excel
         ExcelCreator excelCreator = new ExcelCreator();
         String excelPath = excelCreator.saveReqListWithFiledCompletenessInfoToExcel(reqListWithFiledCompletenessInfo);
         System.out.println("需求完整度信息已生成excel，路径为：" + excelPath);
+
+        //2.2 统计维度的分析
+        Map<String, Map<String, OrgLevelStatistics>> orgLevelStatistics = analyzeReq.getOrgLevelStatistics(reqListWithFiledCompletenessInfo);
+        //统计维度的完整度信息写excel
+        excelPath = excelCreator.saveOrgLevelStatisticsToExcel(orgLevelStatistics);
+        System.out.println("统计维度完整度信息已生成excel，路径为：" + excelPath);
     }
 
     private List<Emp> readEmpExcel(String empExcel) throws IOException {
@@ -129,8 +139,8 @@ public class App
 
     public static void main(String[] args) throws IOException {
 //        String onesReqExcel = "/Volumes/文枢工作空间/需求列表-22的副本.xlsx";
-        String onesReqExcel = "/Volumes/文枢工作空间/需求列表-786512545-1704804306020的副本.xlsx";
-        String empExcel = "/Volumes/文枢工作空间/办公组织信息-786551745-1704804276866.xlsx";
+        String onesReqExcel = "/Volumes/文枢工作空间/需求列表-810313196-1707121285799.xlsx";
+        String empExcel = "/Volumes/文枢工作空间/组织信息-810305350-1707120774763.xlsx";
         App app = new App();
         app.process(onesReqExcel, empExcel);
     }
