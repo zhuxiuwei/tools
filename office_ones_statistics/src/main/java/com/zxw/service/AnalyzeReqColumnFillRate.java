@@ -83,7 +83,7 @@ public class AnalyzeReqColumnFillRate {
      */
     public Map<String, Map<String, OrgLevelStatistics>> getOrgLevelStatistics(List<OnesReqAnalyzed> reqs){
         Map<String, Map<String, OrgLevelStatistics>> orgLevelStatisticsMap = new HashMap<>();
-        //计算[办公效率后端-1]每个组织每个字段填写率
+        //计算[办公效率后端-1]每个小组每个ONES字段填写率
         reqs.forEach(onesReq -> {
             String orgName = onesReq.getBackendInvolvedOrgName();
             if(!orgLevelStatisticsMap.containsKey(orgName)){
@@ -108,7 +108,7 @@ public class AnalyzeReqColumnFillRate {
             });
         });
 
-        //计算[办公效率后端]整个组织每个字段的整体填写率
+        //汇总以上各小组填写情况，计算整个[办公效率后端]大组每个字段的整体填写率
         String banGongOrgName = "总体";
         Map<String, OrgLevelStatistics> filedLevelStatisticsMap_BanGong = new HashMap<>();
         orgLevelStatisticsMap.forEach((orgName, filedLevelStatisticsMap) -> {
@@ -124,7 +124,7 @@ public class AnalyzeReqColumnFillRate {
         });
         orgLevelStatisticsMap.put(banGongOrgName, filedLevelStatisticsMap_BanGong);
 
-        //计算组织整体字段填写率
+        //计算每个组织(包括[办公效率后端])全部重点ONES字段的整体字段填写率
         orgLevelStatisticsMap.forEach((orgName, filedLevelStatisticsMap) -> {
             OrgLevelStatistics totalOrgLevelStatistics = new OrgLevelStatistics();
             totalOrgLevelStatistics.orgName = orgName;
@@ -137,12 +137,15 @@ public class AnalyzeReqColumnFillRate {
             filedLevelStatisticsMap.put("整体填写率", totalOrgLevelStatistics);
         });
 
-        //对结果进线排序。排序规则：整体填写率高的组织放前面，「总体」永远放最后面。
+        //对结果进线排序
         return sortOrgLevelStatisticsMap(orgLevelStatisticsMap);
     }
 
     /**
-     *  对结果进线排序。排序规则：整体填写率高的组织放前面，「总体」永远放最后面。
+     * 对结果进线排序。
+     * 排序规则：整体填写率高的组织放前面，「总体」永远放最后面。
+     * @param orgLevelStatisticsMap 待排序的map
+     * @return key已经排好序的LinkedHashMap
      */
     private Map<String, Map<String, OrgLevelStatistics>> sortOrgLevelStatisticsMap(Map<String, Map<String, OrgLevelStatistics>> orgLevelStatisticsMap) {
         List<OrgTotalFillRateTuple> orgTotalFillRateTupleList = new ArrayList<>();
