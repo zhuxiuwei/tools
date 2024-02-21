@@ -1,9 +1,6 @@
 package com.zxw.service;
 
-import com.zxw.bean.Emp;
-import com.zxw.bean.OnesReq;
-import com.zxw.bean.OnesReqAnalyzed;
-import com.zxw.bean.OrgLevelStatistics;
+import com.zxw.bean.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -140,6 +137,24 @@ public class AnalyzeReq {
             filedLevelStatisticsMap.put("整体填写率", totalOrgLevelStatistics);
         });
 
-        return orgLevelStatisticsMap;
+        //对结果进线排序。排序规则：整体填写率高的组织放前面，「总体」永远放最后面。
+        return sortOrgLevelStatisticsMap(orgLevelStatisticsMap);
+    }
+
+    /**
+     *  对结果进线排序。排序规则：整体填写率高的组织放前面，「总体」永远放最后面。
+     */
+    private Map<String, Map<String, OrgLevelStatistics>> sortOrgLevelStatisticsMap(Map<String, Map<String, OrgLevelStatistics>> orgLevelStatisticsMap) {
+        List<OrgTotalFillRateTuple> orgTotalFillRateTupleList = new ArrayList<>();
+        orgLevelStatisticsMap.forEach((orgName, filedLevelStatisticsMap) -> {
+            OrgLevelStatistics totalOrgLevelStatistics = filedLevelStatisticsMap.get("整体填写率");
+            orgTotalFillRateTupleList.add(new OrgTotalFillRateTuple(orgName, totalOrgLevelStatistics.fillRate));
+        });
+        Collections.sort(orgTotalFillRateTupleList);
+        Map<String, Map<String, OrgLevelStatistics>> res = new LinkedHashMap<>();
+        orgTotalFillRateTupleList.forEach(orgTotalFillRateTuple -> {
+            res.put(orgTotalFillRateTuple.getOrgName(), orgLevelStatisticsMap.get(orgTotalFillRateTuple.getOrgName()));
+        });
+        return res;
     }
 }

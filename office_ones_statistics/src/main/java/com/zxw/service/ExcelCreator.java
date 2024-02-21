@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * javaBeans转excel
@@ -201,50 +202,68 @@ public class ExcelCreator {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Sheet1");
         // 创建表头
-        List<String> excelHeaders = Arrays.asList("提出时间","需求澄清日期","PRD终审通过时间","技术评审结束时间",
-                "预计上线时间","实际提测时间","实际测试结束时间","实际上线时间","技术主R","测试主R","产品主R","是否QA测试","整体填写率");
         Row headerRow = sheet.createRow(0);
         Cell headerCell = headerRow.createCell(0);
         headerCell.setCellValue("组织");
+        setCellStyle(workbook, headerCell, IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex(), IndexedColors.BLACK.getIndex());
         headerCell = headerRow.createCell(1);
         headerCell.setCellValue("类型");
-        for (int i = 0; i < excelHeaders.size(); i++) {
+        setCellStyle(workbook, headerCell, IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex(), IndexedColors.BLACK.getIndex());
+        List<String> dataHeaders = Arrays.asList("提出时间","需求澄清日期","PRD终审通过时间","技术评审结束时间",
+                "预计上线时间","实际提测时间","实际测试结束时间","实际上线时间","技术主R","测试主R","产品主R","是否QA测试","整体填写率");
+        for (int i = 0; i < dataHeaders.size(); i++) {
             headerCell = headerRow.createCell(i + 2);
-            headerCell.setCellValue(excelHeaders.get(i));
+            headerCell.setCellValue(dataHeaders.get(i));
+            setCellStyle(workbook, headerCell, IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex(), IndexedColors.BLACK.getIndex());
         }
 
         //填充数据
+        AtomicInteger rowIdx = new AtomicInteger();
         orgLevelStatistics.forEach((orgName, fieldLevelStatistics) -> {
-            int rowIdx = 0, columnIdx = 0;
+            int columnIdx = 0;
             Map<String, OrgLevelStatistics> filedLevelStatistic = orgLevelStatistics.get(orgName);
-            Row dataRow = sheet.createRow(++ rowIdx);
-            //组织名
+            Row dataRow = sheet.createRow(rowIdx.incrementAndGet());
+
+            //「应该填写数」 行
             Cell cell = dataRow.createCell(columnIdx++);
             cell.setCellValue(orgName);
-            //应该填写
             cell = dataRow.createCell(1);
             cell.setCellValue("应该填写数");
-            for (String columnName: excelHeaders){
-                cell = dataRow.createCell(columnIdx++);
+            for (String columnName: dataHeaders){
+                cell = dataRow.createCell(++columnIdx);
                 cell.setCellValue(fieldLevelStatistics.get(columnName).shouldFillCount);
             }
 
-            //实际填写
-            dataRow = sheet.createRow(++ rowIdx);
+            //「实际填写数」 行
+            columnIdx = 0;
+            dataRow = sheet.createRow(rowIdx.incrementAndGet());
+            cell = dataRow.createCell(columnIdx++);
+            cell.setCellValue(orgName);
             cell = dataRow.createCell(1);
             cell.setCellValue("实际填写数");
-            for (String columnName: excelHeaders){
-                cell = dataRow.createCell(columnIdx++);
+            for (String columnName: dataHeaders){
+                cell = dataRow.createCell(++columnIdx);
                 cell.setCellValue(fieldLevelStatistics.get(columnName).actualFillCount);
             }
 
-            //填写占比
-            dataRow = sheet.createRow(++ rowIdx);
+            //「填写占比」 行
+            columnIdx = 0;
+            dataRow = sheet.createRow(rowIdx.incrementAndGet());
+            cell = dataRow.createCell(columnIdx++);
+            cell.setCellValue(orgName);
             cell = dataRow.createCell(1);
             cell.setCellValue("填写占比");
-            for (String columnName: excelHeaders){
-                cell = dataRow.createCell(columnIdx++);
-                cell.setCellValue(fieldLevelStatistics.get(columnName).actualFillCount);
+            for (String columnName: dataHeaders){
+                cell = dataRow.createCell(++columnIdx);
+                // 创建样式。设置数据格式为百分比，保留一位小数。且为粗体字。
+                Font font = workbook.createFont();
+                font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+                CellStyle style = workbook.createCellStyle();
+                style.setFont(font);
+                DataFormat format = workbook.createDataFormat();
+                style.setDataFormat(format.getFormat("0.0%"));
+                cell.setCellStyle(style);
+                cell.setCellValue(fieldLevelStatistics.get(columnName).fillRate);
             }
         });
         String excelPath = "/Users/zhuxiuwei/Documents/Ones填写分析-组织维度"+ "-" + System.currentTimeMillis() + ".xlsx";
@@ -255,5 +274,6 @@ public class ExcelCreator {
             System.err.println("保存excel文件失败到路径失败：" + excelPath + ", 程序异常退出。");
             System.exit(0);
         }
-        return excelPath;    }
+        return excelPath;
+    }
 }
