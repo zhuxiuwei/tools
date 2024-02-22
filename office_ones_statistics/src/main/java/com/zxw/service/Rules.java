@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * 规则数据，如子类型工作流状态顺序
- * 某字段在哪个状态后就应该有值le
+ * 某字段在哪个状态后就应该有值了
  */
 public class Rules {
 

@@ -137,12 +137,12 @@ public class AnalyzeReqColumnFillRate {
             filedLevelStatisticsMap.put("整体填写率", totalOrgLevelStatistics);
         });
 
-        //对结果进线排序
+        //对结果进行排序
         return sortOrgLevelStatisticsMap(orgLevelStatisticsMap);
     }
 
     /**
-     * 对结果进线排序。
+     * 对结果进行排序。
      * 排序规则：整体填写率高的组织放前面，「总体」永远放最后面。
      * @param orgLevelStatisticsMap 待排序的map
      * @return key已经排好序的LinkedHashMap
