@@ -70,6 +70,11 @@ public class AnalyzeReqColumnFillRate {
                     && onesReqAnalyzed.cellValues.get("是否QA测试").getCellValue().equals("否")){
                 onesReqAnalyzed.cellValues.get("测试主R").setNormalFont();
                 onesReqAnalyzed.cellValues.get("测试主R").setCellValue("NULL(但无需填写)");
+                //240312 update: 和肖倩做了确认，不需要QA测试的，「实际测试结束时间」、「实际提测时间」可以不填，也可以不建提测单。
+                onesReqAnalyzed.cellValues.get("实际提测时间").setNormalFont();
+                onesReqAnalyzed.cellValues.get("实际提测时间").setCellValue("NULL(但无需填写)");
+                onesReqAnalyzed.cellValues.get("实际测试结束时间").setNormalFont();
+                onesReqAnalyzed.cellValues.get("实际测试结束时间").setCellValue("NULL(但无需填写)");
             }
         });
 
