@@ -1,5 +1,5 @@
 # 原始txt文件地址
-sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/近10年人图俄文西文图书.txt"
+sourceTxtFilePath: "/Users/zhuxiuwei/Downloads/文库赠书.txt"
 
 # 生成目标excel文件的目录地址
 targetExcelPath: "/Users/zhuxiuwei/Downloads"

@@ -62,7 +62,7 @@ public class OnesReqAnalyzed implements Comparable<OnesReqAnalyzed>{
     private String backendInvolvedOrgName;   //后端参与组织名，由backendInvolvedOrgPaths精简而来。
     public String getBackendInvolvedOrgName(){
         return backendInvolvedOrgPaths.toString().replace("[", "").replace("]", "")
-                .replace("/美团点评/基础研发平台/企业平台研发部/办公效率/办公效率后端/", "")
+                .replace("/美团点评/核心本地商业/基础研发平台/企业平台研发部/办公效率/办公效率后端/", "")
                 .replace("/", "");
     }
 
