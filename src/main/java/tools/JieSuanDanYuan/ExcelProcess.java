@@ -23,326 +23,63 @@ public class ExcelProcess {
 
     //处理财务同事给的excel
     public  static void processExcel1() throws FileNotFoundException {
+
+        String bangongApp = "123门户,DOCS文档服务,electron更新服务,OA,Office文档模板服务,url跳转大象小程序映射,WPS文档,办公开放平台,大蒜,大象,大象企业服务,大象搜索,大象应用,大象预览,大象桌面端,动态,工卡系统,话题,即时通讯,结衣,快搭 一体化审批流程搭建平台,快搭零代码应用搭建,流程平台,美团问卷,内容中台,企业管理后台,视讯,微安,无线访客接入服务,项目管理,学城,一体化卡片,云盘,制度系统";
+        Set<String> bangongs = new HashSet<>();
+        String[] bangongApps = bangongApp.split(",");
+        for (String app: bangongApps)
+            bangongs.add(app);
+//        System.out.println(bangongs.size());    //34
+
+
         String file = "/Volumes/文枢工作空间/未命名文件夹/企业平台服务-成本明细9月 2.csv";
         Scanner sc = new Scanner(new File(file));
+        Map<String, Double> appPrice = new TreeMap();
+        String not = "";
         while (sc.hasNextLine()){
-            String s = sc.nextLine();
-            System.out.println(s);
+            String line = sc.nextLine();
+            String[] split = line.split(",");
+            String app = split[0].trim();
+
+            if(bangongs.contains(app)) {
+                double price = Double.parseDouble(split[5]);
+                double oldPrice = appPrice.getOrDefault(app, 0.0);
+                price += oldPrice;
+                appPrice.put(app, price);
+            }else {
+//                System.out.println(app + " 00" + line);
+            }
         }
+        appPrice.entrySet().forEach(entry -> {
+            System.out.println(entry.getKey() + "," + entry.getValue() );
+        });
     }
 
     //处理我自己导出的excel
-    public  static void processExcel2(){
-        String file = "/Volumes/文枢工作空间/未命名文件夹/企业平台服务-办公效率账单-appkey(2024-09).csv";
+    public  static void processExcel2() throws FileNotFoundException {
+        String file = "/Volumes/文枢工作空间/未命名文件夹/企业平台服务-办公效率账单-appkey(2024-10).csv";
+        Scanner sc = new Scanner(new File(file));
+        Map<String, Double> appPrice = new TreeMap();
+        while (sc.hasNextLine()){
+            String line = sc.nextLine();
+            String[] split = line.split(",");
+            String app = split[2].trim();
+            double price = 0.0;
+            try {
+                String priceStr = split[1].replace(",", "");
+                price = Double.parseDouble(priceStr);
+            }catch (Exception e){}
+            double oldPrice = appPrice.getOrDefault(app, 0.0);
+            price += oldPrice;
+            appPrice.put(app, price);
+        }
+        appPrice.entrySet().forEach(entry -> {
+            System.out.println(entry.getKey() + "," + entry.getValue() );
+        });
 
     }
 
-    public static void main(String[] args) {
-        String old = "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "ape\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "Citadel\n" +
-                "diego\n" +
-                "diego\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "DX\n" +
-                "dxdesktop\n" +
-                "dxenterprise\n" +
-                "dxenterprise\n" +
-                "dxenterprise\n" +
-                "dxenterprise\n" +
-                "dxenterprise\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "dxsearch\n" +
-                "electronupdater\n" +
-                "electronupdater\n" +
-                "enterprisesaas\n" +
-                "family\n" +
-                "family\n" +
-                "Gakki\n" +
-                "garlic\n" +
-                "guestwifi\n" +
-                "http2mrn\n" +
-                "IM\n" +
-                "kuaida\n" +
-                "kuaida\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "mbox\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "OA\n" +
-                "open\n" +
-                "open\n" +
-                "PRE\n" +
-                "projectmanager\n" +
-                "Reich\n" +
-                "Rule\n" +
-                "staticdocs\n" +
-                "staticdocs\n" +
-                "staticdocs\n" +
-                "survey\n" +
-                "survey\n" +
-                "survey\n" +
-                "survey\n" +
-                "survey\n" +
-                "survey\n" +
-                "topic\n" +
-                "universalCard\n" +
-                "Vivian\n" +
-                "Vivian\n" +
-                "workcard\n" +
-                "workcard\n" +
-                "wpsoffice\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm\n" +
-                "xm";
-
-        ExcelProcess.getSingleValeFromOneColumn(old);
+    public static void main(String[] args) throws FileNotFoundException {
+        ExcelProcess.processExcel2();
     }
 }
