@@ -1,5 +1,7 @@
 package tools.JieSuanDanYuan;
 
+import tools.JieSuanDanYuan.bean.CostDetail;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -79,7 +81,372 @@ public class ExcelProcess {
 
     }
 
+    //按团队，生成开销情况
+    public static void processCostByTeam() throws FileNotFoundException {
+        String file = "/Volumes/文枢工作空间/未命名文件夹/222-企业平台服务-成本明细9月.csv";
+        Scanner sc = new Scanner(new File(file));
+        Map<String, CostDetail> teamCost = new TreeMap();
+        sc.nextLine();  //跳过第一行header
+        while (sc.hasNextLine()){
+            String[] lines = sc.nextLine().split(",");
+            String prod = lines[0].trim();
+            String costItem = lines[1].trim();
+            double price = Double.parseDouble(lines[3].trim());
+            String rdTeam = lines[7].trim();
+            CostDetail costDetail = new CostDetail(prod, costItem, price, rdTeam);
+            String key = rdTeam + prod;
+            CostDetail old = teamCost.get(key);
+            if(old != null){
+                costDetail.setCost(costDetail.getCost() + old.getCost());
+            }
+            teamCost.put(key, costDetail);
+        }
+        teamCost.values().forEach(cost -> {
+            System.out.println( cost.getRdTeam() + ","
+                + cost.getProd() + ","
+                + cost.getCostItem() + ","
+                + cost.getCost());
+        });
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
-        ExcelProcess.processExcel2();
+//        ExcelProcess.processExcel2();
+//        processCostByTeam();
+        String rr = "产品\n" +
+                "\n" +
+                "IM即时通讯\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "Mafka\n" +
+                "\n" +
+                "Blade\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "Cellar\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "DTS\n" +
+                "\n" +
+                "Squirrel\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "Shepherd\n" +
+                "\n" +
+                "Quake\n" +
+                "\n" +
+                "SecuritySrv-内容风控\n" +
+                "\n" +
+                "CDN\n" +
+                "\n" +
+                "保时洁-人审服务\n" +
+                "\n" +
+                "Shark\n" +
+                "\n" +
+                "SecuritySrv-业务安全\n" +
+                "\n" +
+                "Venus\n" +
+                "\n" +
+                "Eagle\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "Venus\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "物理机\n" +
+                "\n" +
+                "DTS\n" +
+                "\n" +
+                "搜索离线平台\n" +
+                "\n" +
+                "CDN\n" +
+                "\n" +
+                "VM\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "Mafka\n" +
+                "\n" +
+                "Squirrel\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "Cellar\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "Quake\n" +
+                "\n" +
+                "SecuritySrv-内容风控\n" +
+                "\n" +
+                "Shepherd\n" +
+                "\n" +
+                "视觉AI\n" +
+                "\n" +
+                "Shark\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "Squirrel\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "DTS\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "Cellar\n" +
+                "\n" +
+                "Mafka\n" +
+                "\n" +
+                "Shark\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "Quake\n" +
+                "\n" +
+                "Venus\n" +
+                "\n" +
+                "Shepherd\n" +
+                "\n" +
+                "Eagle\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "DTS\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "Squirrel\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "Mafka\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "CDN\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "Shark\n" +
+                "\n" +
+                "Shepherd\n" +
+                "\n" +
+                "Blade\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "Shark\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "搜索离线平台\n" +
+                "\n" +
+                "DTS\n" +
+                "\n" +
+                "VM\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "Squirrel\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "Eagle\n" +
+                "\n" +
+                "Quake\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "Mafka\n" +
+                "\n" +
+                "Nest\n" +
+                "\n" +
+                "Cellar\n" +
+                "\n" +
+                "CDN\n" +
+                "\n" +
+                "Shepherd\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "Eagle\n" +
+                "\n" +
+                "Squirrel\n" +
+                "\n" +
+                "DTS\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "Mafka\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "产研协作与洞察工具\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "Nest\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "Quake\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "CDN\n" +
+                "\n" +
+                "DTS\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "Venus\n" +
+                "\n" +
+                "Squirrel\n" +
+                "\n" +
+                "Oceanus\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "Nest\n" +
+                "\n" +
+                "VM\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "CDN\n" +
+                "\n" +
+                "Cellar\n" +
+                "\n" +
+                "Nest\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "Raptor\n" +
+                "\n" +
+                "S3\n" +
+                "\n" +
+                "DevTools\n" +
+                "\n" +
+                "Nest\n" +
+                "\n" +
+                "RDS\n" +
+                "\n" +
+                "Hulk\n" +
+                "\n" +
+                "CDN\n" +
+                "\n" +
+                "SCA\n" +
+                "\n" +
+                "块存储\n" +
+                "\n" +
+                "SecuritySrv-信息安全\n" +
+                "\n" +
+                "长传\n" +
+                "\n" +
+                "Venus";
+        getSingleValeFromOneColumn(rr);
     }
 }
