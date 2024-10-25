@@ -109,8 +109,76 @@ public class ExcelProcess {
         });
     }
 
+    //看TT与流程团队，分产品的情况
+    public static void processCostAtTTAndProcessTeam() throws FileNotFoundException {
+        String file = "/Volumes/文枢工作空间/企业平台服务-成本明细(2024-01)/企业平台服务-成本明细(2024-01)-1.csv";
+        Scanner sc = new Scanner(new File(file));
+        Map<String, CostDetail> teamCost = new TreeMap();
+        sc.nextLine();  //跳过第一行header
+        while (sc.hasNextLine()){
+            String[] lines = sc.nextLine().split(",");
+            String prod = lines[0].trim();
+            String costItem = lines[1].trim();
+            String app = lines[5].trim();
+            double price = Double.parseDouble(lines[3].trim());
+            String rdTeam = lines[7].trim();
+            if(rdTeam.contains("流程和TT研发组")) {
+                CostDetail costDetail = new CostDetail(prod, costItem, price, rdTeam, app);
+                String key = prod + app;
+                CostDetail old = teamCost.get(key);
+                if (old != null) {
+                    costDetail.setCost(costDetail.getCost() + old.getCost());
+                }
+                teamCost.put(key, costDetail);
+            }
+        }
+        teamCost.values().forEach(cost -> {
+            System.out.println(cost.getApp() + ","
+                    + cost.getProd() + ","
+                    + cost.getCost());
+        });
+    }
+
+    //基础服务团队，cdn s3 venus的情况
+    public static void processCostAtJiChuFuWuTeam() throws FileNotFoundException {
+        String file = "/Volumes/文枢工作空间/企业平台服务-成本明细(2024-01)/企业平台服务-成本明细(2024-07)-1.csv";
+        Scanner sc = new Scanner(new File(file));
+        Map<String, CostDetail> teamCost = new TreeMap();
+        sc.nextLine();  //跳过第一行header
+        while (sc.hasNextLine()){
+            String[] lines = sc.nextLine().split(",");
+            String rdTeam = lines[14].trim();
+            if(rdTeam.contains("办公效率后端/基础服务")) {
+                if(lines.length != 18) {
+                    System.err.println(lines.length);
+                }
+                String prod = lines[0].trim();
+                String costItem = lines[1].trim();
+//                String app = lines[12].trim();
+                double price = Double.parseDouble(lines[7].trim());
+                CostDetail costDetail = new CostDetail(prod, costItem, price, rdTeam);
+//                String key = prod + app;
+                String key = prod;
+                CostDetail old = teamCost.get(key);
+                if (old != null) {
+                    costDetail.setCost(costDetail.getCost() + old.getCost());
+                }
+                if(prod.equalsIgnoreCase("S3")
+                        || prod.equalsIgnoreCase("Venus")
+                        || prod.equalsIgnoreCase("CDN"))
+                    teamCost.put(key, costDetail);
+            }
+        }
+        teamCost.values().forEach(cost -> {
+            System.out.println(cost.getProd() + ","
+                    + cost.getCost());
+        });
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
 //        ExcelProcess.processExcel2();
 //        processCostByTeam();
+//        processCostAtTTAndProcessTeam();
+        processCostAtJiChuFuWuTeam();
     }
 }

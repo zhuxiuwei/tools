@@ -8,12 +8,21 @@ public class CostDetail {
     private String costItem;    //计费项，如【存储资源/高性能通用H21】
     private double cost;    //计费
     private String rdTeam;  //开发团队
+    private String app; //产品
 
     public CostDetail(String prod, String costItem, double cost, String rdTeam) {
         this.prod = prod;
         this.costItem = costItem;
         this.cost = cost;
         this.rdTeam = rdTeam;
+    }
+
+    public CostDetail(String prod, String costItem, double cost, String rdTeam, String app) {
+        this.prod = prod;
+        this.costItem = costItem;
+        this.cost = cost;
+        this.rdTeam = rdTeam;
+        this.app = app;
     }
 
     public String getProd() {
@@ -48,6 +57,14 @@ public class CostDetail {
         this.rdTeam = rdTeam;
     }
 
+    public String getApp() {
+        return app;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
+    }
+
     @Override
     public String toString() {
         return "CostDetail{" +
@@ -55,6 +72,7 @@ public class CostDetail {
                 ", costItem='" + costItem + '\'' +
                 ", cost=" + cost +
                 ", rdTeam='" + rdTeam + '\'' +
+                ", app='" + app + '\'' +
                 '}';
     }
 }
