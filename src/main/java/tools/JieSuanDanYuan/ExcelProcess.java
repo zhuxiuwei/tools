@@ -141,17 +141,17 @@ public class ExcelProcess {
 
     //基础服务团队，cdn s3 venus的情况
     public static void processCostAtJiChuFuWuTeam() throws FileNotFoundException {
-        String file = "/Volumes/文枢工作空间/企业平台服务-成本明细(2024-01)/企业平台服务-成本明细(2024-07)-1.csv";
+        String file = "/Volumes/文枢工作空间/企业平台服务-成本明细(2024-01)/企业平台服务-成本明细(2024-06)-1.csv";
         Scanner sc = new Scanner(new File(file));
         Map<String, CostDetail> teamCost = new TreeMap();
         sc.nextLine();  //跳过第一行header
         while (sc.hasNextLine()){
             String[] lines = sc.nextLine().split(",");
+            if(lines.length != 18) {
+                System.err.println(lines.length);
+            }
             String rdTeam = lines[14].trim();
             if(rdTeam.contains("办公效率后端/基础服务")) {
-                if(lines.length != 18) {
-                    System.err.println(lines.length);
-                }
                 String prod = lines[0].trim();
                 String costItem = lines[1].trim();
 //                String app = lines[12].trim();
@@ -175,10 +175,43 @@ public class ExcelProcess {
         });
     }
 
+    //计算各产品或team，在各开销项的占比
+    public static void calPercentByProdOrTeam() throws FileNotFoundException {
+        String file = "/Volumes/文枢工作空间/未命名文件夹/办公整体-计算占比用.csv";
+        Scanner sc = new Scanner(new File(file));
+
+        //计算每项的总和
+        Map<String, Double> costItemTotalPrice = new HashMap<>();
+        sc.nextLine();  //跳过第一行header
+        while (sc.hasNextLine()){
+            String[] lines = sc.nextLine().split(",");
+            String costItem = lines[1].trim();
+            double price = Double.parseDouble(lines[2].trim());
+            double oldPrice = costItemTotalPrice.getOrDefault(costItem, 0.0);
+            oldPrice += price;
+            costItemTotalPrice.put(costItem, oldPrice);
+        }
+
+        //计算每项每组的百分比
+        sc = new Scanner(new File(file));
+        //计算每项的总和
+        sc.nextLine();  //跳过第一行header
+        while (sc.hasNextLine()){
+            String[] lines = sc.nextLine().split(",");
+            String app = lines[0];
+            String costItem = lines[1].trim();
+            double price = Double.parseDouble(lines[2].trim());
+            double percent = price/costItemTotalPrice.get(costItem);
+            System.out.println(app+","+costItem+","+percent);
+        }
+
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
 //        ExcelProcess.processExcel2();
 //        processCostByTeam();
 //        processCostAtTTAndProcessTeam();
-        processCostAtJiChuFuWuTeam();
+//        processCostAtJiChuFuWuTeam();
+        calPercentByProdOrTeam();
     }
 }
