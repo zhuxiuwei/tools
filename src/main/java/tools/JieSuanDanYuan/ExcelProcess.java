@@ -207,11 +207,34 @@ public class ExcelProcess {
 
     }
 
+    //根据9月*12，算每个产品全年初始预估
+    public static void calYearCostEstimateBySeptCost() throws FileNotFoundException {
+        String file = "/Volumes/文枢工作空间/未命名文件夹/2222.csv";
+        Scanner sc = new Scanner(new File(file));
+
+        Map<String, Double> septCost = new HashMap<>();
+        Map<String, Double> costItemTotalPrice = new HashMap<>();
+        sc.nextLine();  //跳过第一行header
+        while (sc.hasNextLine()){
+            String[] lines = sc.nextLine().split(",");
+            String costItem = lines[0].trim();
+            double price = Double.parseDouble(lines[1].trim());
+            double oldPrice = costItemTotalPrice.getOrDefault(costItem, 0.0);
+            oldPrice += price;
+            costItemTotalPrice.put(costItem, oldPrice);
+        }
+        costItemTotalPrice.entrySet().forEach(entry -> {
+            System.out.println(entry.getKey() + ","
+                    + entry.getValue()*12);
+        });
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
 //        ExcelProcess.processExcel2();
 //        processCostByTeam();
 //        processCostAtTTAndProcessTeam();
 //        processCostAtJiChuFuWuTeam();
-        calPercentByProdOrTeam();
+//        calPercentByProdOrTeam();
+        calYearCostEstimateBySeptCost();
     }
 }
