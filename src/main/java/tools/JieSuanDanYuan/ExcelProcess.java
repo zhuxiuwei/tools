@@ -209,7 +209,7 @@ public class ExcelProcess {
 
     //根据9月*12，算每个产品全年初始预估
     public static void calYearCostEstimateBySeptCost() throws FileNotFoundException {
-        String file = "/Volumes/文枢工作空间/未命名文件夹/2222.csv";
+        String file = "/Volumes/文枢工作空间/未命名文件夹/25年预算汇总-姚蓓.csv";
         Scanner sc = new Scanner(new File(file));
 
         Map<String, Double> septCost = new HashMap<>();
