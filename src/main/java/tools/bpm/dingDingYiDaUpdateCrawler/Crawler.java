@@ -1,4 +1,4 @@
-package tools.dingDingYiDaUpdateCrawler;
+package tools.bpm.dingDingYiDaUpdateCrawler;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
