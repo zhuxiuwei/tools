@@ -3,21 +3,21 @@ package tools.JieSuanDanYuan.bean;
 /**
  * 开销详情
  */
-public class CostDetail {
+public class CostDetail24 {
     private String prod;    //产品，如blade、Celler等
     private String costItem;    //计费项，如【存储资源/高性能通用H21】
     private double cost;    //计费
     private String rdTeam;  //开发团队
     private String app; //产品
 
-    public CostDetail(String prod, String costItem, double cost, String rdTeam) {
+    public CostDetail24(String prod, String costItem, double cost, String rdTeam) {
         this.prod = prod;
         this.costItem = costItem;
         this.cost = cost;
         this.rdTeam = rdTeam;
     }
 
-    public CostDetail(String prod, String costItem, double cost, String rdTeam, String app) {
+    public CostDetail24(String prod, String costItem, double cost, String rdTeam, String app) {
         this.prod = prod;
         this.costItem = costItem;
         this.cost = cost;

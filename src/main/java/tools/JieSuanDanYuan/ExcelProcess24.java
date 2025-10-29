@@ -1,12 +1,15 @@
 package tools.JieSuanDanYuan;
 
-import tools.JieSuanDanYuan.bean.CostDetail;
+import tools.JieSuanDanYuan.bean.CostDetail24;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class ExcelProcess {
+/**
+ * 2024年的结算填报（25预算）
+ */
+public class ExcelProcess24 {
     /**
      * 读excel，多行的值，取唯一一个
      * @param originalText
@@ -85,7 +88,7 @@ public class ExcelProcess {
     public static void processCostByTeam() throws FileNotFoundException {
         String file = "/Volumes/文枢工作空间/未命名文件夹/222-企业平台服务-成本明细9月.csv";
         Scanner sc = new Scanner(new File(file));
-        Map<String, CostDetail> teamCost = new TreeMap();
+        Map<String, CostDetail24> teamCost = new TreeMap();
         sc.nextLine();  //跳过第一行header
         while (sc.hasNextLine()){
             String[] lines = sc.nextLine().split(",");
@@ -93,13 +96,13 @@ public class ExcelProcess {
             String costItem = lines[1].trim();
             double price = Double.parseDouble(lines[3].trim());
             String rdTeam = lines[7].trim();
-            CostDetail costDetail = new CostDetail(prod, costItem, price, rdTeam);
+            CostDetail24 costDetail24 = new CostDetail24(prod, costItem, price, rdTeam);
             String key = rdTeam + prod;
-            CostDetail old = teamCost.get(key);
+            CostDetail24 old = teamCost.get(key);
             if(old != null){
-                costDetail.setCost(costDetail.getCost() + old.getCost());
+                costDetail24.setCost(costDetail24.getCost() + old.getCost());
             }
-            teamCost.put(key, costDetail);
+            teamCost.put(key, costDetail24);
         }
         teamCost.values().forEach(cost -> {
             System.out.println( cost.getRdTeam() + ","
@@ -113,7 +116,7 @@ public class ExcelProcess {
     public static void processCostAtTTAndProcessTeam() throws FileNotFoundException {
         String file = "/Volumes/文枢工作空间/企业平台服务-成本明细(2024-01)/企业平台服务-成本明细(2024-01)-1.csv";
         Scanner sc = new Scanner(new File(file));
-        Map<String, CostDetail> teamCost = new TreeMap();
+        Map<String, CostDetail24> teamCost = new TreeMap();
         sc.nextLine();  //跳过第一行header
         while (sc.hasNextLine()){
             String[] lines = sc.nextLine().split(",");
@@ -123,13 +126,13 @@ public class ExcelProcess {
             double price = Double.parseDouble(lines[3].trim());
             String rdTeam = lines[7].trim();
             if(rdTeam.contains("流程和TT研发组")) {
-                CostDetail costDetail = new CostDetail(prod, costItem, price, rdTeam, app);
+                CostDetail24 costDetail24 = new CostDetail24(prod, costItem, price, rdTeam, app);
                 String key = prod + app;
-                CostDetail old = teamCost.get(key);
+                CostDetail24 old = teamCost.get(key);
                 if (old != null) {
-                    costDetail.setCost(costDetail.getCost() + old.getCost());
+                    costDetail24.setCost(costDetail24.getCost() + old.getCost());
                 }
-                teamCost.put(key, costDetail);
+                teamCost.put(key, costDetail24);
             }
         }
         teamCost.values().forEach(cost -> {
@@ -143,7 +146,7 @@ public class ExcelProcess {
     public static void processCostAtJiChuFuWuTeam() throws FileNotFoundException {
         String file = "/Volumes/文枢工作空间/企业平台服务-成本明细(2024-01)/企业平台服务-成本明细(2024-06)-1.csv";
         Scanner sc = new Scanner(new File(file));
-        Map<String, CostDetail> teamCost = new TreeMap();
+        Map<String, CostDetail24> teamCost = new TreeMap();
         sc.nextLine();  //跳过第一行header
         while (sc.hasNextLine()){
             String[] lines = sc.nextLine().split(",");
@@ -156,17 +159,17 @@ public class ExcelProcess {
                 String costItem = lines[1].trim();
 //                String app = lines[12].trim();
                 double price = Double.parseDouble(lines[7].trim());
-                CostDetail costDetail = new CostDetail(prod, costItem, price, rdTeam);
+                CostDetail24 costDetail24 = new CostDetail24(prod, costItem, price, rdTeam);
 //                String key = prod + app;
                 String key = prod;
-                CostDetail old = teamCost.get(key);
+                CostDetail24 old = teamCost.get(key);
                 if (old != null) {
-                    costDetail.setCost(costDetail.getCost() + old.getCost());
+                    costDetail24.setCost(costDetail24.getCost() + old.getCost());
                 }
                 if(prod.equalsIgnoreCase("S3")
                         || prod.equalsIgnoreCase("Venus")
                         || prod.equalsIgnoreCase("CDN"))
-                    teamCost.put(key, costDetail);
+                    teamCost.put(key, costDetail24);
             }
         }
         teamCost.values().forEach(cost -> {
